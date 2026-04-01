@@ -1,6 +1,7 @@
 # Local env (API URLs, secrets)
 .env
 .env.*
+!.env.example
 
 # Miscellaneous
 *.class

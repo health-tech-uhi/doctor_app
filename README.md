@@ -13,17 +13,28 @@ Before starting, ensure you have the following installed:
 ## 🚀 Getting Started
 
 1.  **Clone the repository** (if you haven't already).
-2.  **Install dependencies**:
+2.  **Configure environment** — copy the example file and adjust values (never commit `.env`):
+    ```bash
+    cp .env.example .env
+    ```
+    See **Environment variables** below for each key. The app loads `.env` at startup.
+3.  **Install dependencies**:
     ```bash
     flutter pub get
     ```
 
+## 🔐 Environment variables
+
+All keys are documented in `.env.example`. Summary:
+
+| Variable                 | Description |
+|--------------------------|-------------|
+| `API_BASE_URL`           | Health platform API base URL (default `http://localhost:3111`). |
+| `FEATURE_KYC_ENABLED`    | `false` (default): skip KYC gating, go to `/dashboard`. `true`: enable `/kyc` flow by verification status. Accepts `true`/`false`, `1`/`0`, `yes`/`no`. |
+
 ## ⚙️ Feature Toggles
 
-- `FEATURE_KYC_ENABLED=false` (default): KYC flow is disabled and authenticated doctors go directly to `/dashboard`.
-- `FEATURE_KYC_ENABLED=true`: KYC gating is enabled (`/kyc` flow becomes active based on verification status).
-
-Set this flag in `doctor_app/.env`.
+KYC is controlled by `FEATURE_KYC_ENABLED` in `.env` (see table above). Defaults match `.env.example`.
 
 ## Signup and OTP
 
