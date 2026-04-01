@@ -76,6 +76,7 @@ class AuthNotifier extends Notifier<AuthState> {
   /// Seeds [doctorProfileProvider] so the dashboard does not fire a duplicate GET.
   Future<void> _hydratePostLoginState() async {
     try {
+      await _authRepository.switchToDoctorProfileContext();
       final profile = await _doctorRepository.getProfile();
       DoctorProfileNotifier.preparePendingHydration(AsyncData(profile));
       ref

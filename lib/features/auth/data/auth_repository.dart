@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../core/network/access_context_restore.dart';
 import '../../../core/network/dio_client.dart';
 import '../../../core/storage/secure_storage.dart';
 
@@ -14,8 +15,8 @@ final authRepositoryProvider = Provider<AuthRepository>((ref) {
 /// Handles direct interactions with the backend API endpoints related to authentication
 /// and securely interfaces with the internal storage mechanisms.
 ///
-/// This app is **doctor-only**: login uses `/api/auth/login` and stored tokens are always
-/// for the doctor flow. There is no `/api/auth/switch-context` (unlike the multi-role web BFF).
+/// This app is **doctor-only**: after login we call `POST /api/auth/switch-context` so the
+/// JWT carries the doctor `profile_id` and `role` (required for `/api/appointments`, etc.).
 class AuthRepository {
   final Dio _dio;
   final SecureStorage _storage;
@@ -64,7 +65,7 @@ class AuthRepository {
       // Require tokens to commit safe login validation
       if (accessToken != null && refreshToken != null) {
         await _storage.saveTokens(
-          accessToken: accessToken, 
+          accessToken: accessToken,
           refreshToken: refreshToken,
         );
       } else {
@@ -94,6 +95,11 @@ class AuthRepository {
       if (firstName != null) 'first_name': firstName,
       if (lastName != null) 'last_name': lastName,
     });
+  }
+
+  /// Binds JWT to the doctor access-control profile (`profile_id` + `role: DOCTOR`).
+  Future<void> switchToDoctorProfileContext() async {
+    await restoreDoctorJwtProfile(plainDio: _dio, storage: _storage);
   }
 
   /// Pings backend out of courtesy and drops tokens immediately protecting the local device state.
