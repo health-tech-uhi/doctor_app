@@ -1,19 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:doctor_app/core/errors/user_facing_error.dart';
-import 'package:doctor_app/core/ui/adaptive/adaptive_widgets.dart';
 import 'package:doctor_app/core/ui/feedback/app_snack_bar.dart';
 import 'package:doctor_app/features/auth/data/auth_repository.dart';
 import 'package:doctor_app/features/auth/providers/auth_provider.dart';
 
-/// Account-only signup flow with OTP verification.
-/// Mirrors patient-web-app onboarding style:
-/// 1) Create auth identity (username/email/phone/password)
-/// 2) Verify OTP
-/// 3) Create account + login
-/// 4) Proceed to doctor profile completion as a separate step
+import '../../../core/ui/glass/app_gradients.dart';
+import '../../../core/ui/glass/aurora_background.dart';
+import '../../../core/ui/glass/glass_card.dart';
+
 class SignupScreen extends ConsumerStatefulWidget {
   const SignupScreen({super.key});
 
@@ -117,121 +113,22 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0A0E1A),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Row(
-                  children: [
-                    IconButton(
-                      tooltip: 'Back to sign in',
-                      onPressed: () => context.go('/login'),
-                      icon: const Icon(Icons.arrow_back, color: Colors.white70),
-                    ),
-                    const SizedBox(width: 8),
-                    const Text(
-                      'Create Account',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                const Text(
-                  'Step 1: Account information + OTP verification',
-                  style: TextStyle(color: Colors.tealAccent, fontSize: 13),
-                ),
-                const SizedBox(height: 24),
-                _buildField(
-                  controller: _usernameCtrl,
-                  label: 'Username',
-                  icon: Icons.alternate_email,
-                  validator: (v) =>
-                      (v == null || v.trim().isEmpty) ? 'Username is required' : null,
-                ),
-                const SizedBox(height: 12),
-                _buildField(
-                  controller: _emailCtrl,
-                  label: 'Email',
-                  icon: Icons.email_outlined,
-                  keyboardType: TextInputType.emailAddress,
-                  validator: (v) {
-                    if (v == null || v.trim().isEmpty) return 'Email is required';
-                    if (!v.contains('@')) return 'Enter a valid email';
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 12),
-                _buildField(
-                  controller: _phoneCtrl,
-                  label: 'Phone',
-                  icon: Icons.phone_android_outlined,
-                  keyboardType: TextInputType.phone,
-                  validator: (v) =>
-                      (v == null || v.trim().isEmpty) ? 'Phone is required' : null,
-                ),
-                const SizedBox(height: 12),
-                _buildField(
-                  controller: _passwordCtrl,
-                  label: 'Password',
-                  icon: Icons.lock_outline,
-                  obscureText: true,
-                  validator: (v) {
-                    if (v == null || v.length < 6) {
-                      return 'Password must be at least 6 characters';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 12),
-                _buildField(
-                  controller: _confirmPasswordCtrl,
-                  label: 'Confirm Password',
-                  icon: Icons.lock_reset,
-                  obscureText: true,
-                  validator: (v) {
-                    if (v != _passwordCtrl.text) return 'Passwords do not match';
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 20),
-                OutlinedButton.icon(
-                  onPressed: _isLoading ? null : _sendOtp,
-                  icon: const Icon(Icons.mark_email_unread_outlined),
-                  label: Text(_otpSent ? 'Resend OTP' : 'Send OTP'),
-                ),
-                const SizedBox(height: 12),
-                _buildField(
-                  controller: _otpCtrl,
-                  label: 'Enter OTP',
-                  icon: Icons.verified_user_outlined,
-                  keyboardType: TextInputType.number,
-                  validator: (v) {
-                    if (v == null || v.trim().isEmpty) return 'OTP is required';
-                    if (v.trim().length != 6) return 'OTP must be 6 digits';
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 24),
-                AdaptivePrimaryButton(
-                  onPressed: _isLoading ? null : _submit,
-                  child: _isLoading
-                      ? const SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : const Text('Verify OTP & Create Account'),
-                ),
-              ],
+      extendBodyBehindAppBar: true,
+      body: AuroraBackground(
+        child: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(24),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  _buildHeader(),
+                  const SizedBox(height: 32),
+                  _buildSignupForm(),
+                  const SizedBox(height: 24),
+                ],
+              ),
             ),
           ),
         ),
@@ -239,60 +136,200 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
     );
   }
 
-  // ---------------------------------------------------------------------------
-  // Reusable helpers
-  // ---------------------------------------------------------------------------
+  Widget _buildHeader() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        IconButton(
+          onPressed: () => context.go('/login'),
+          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 20),
+          style: IconButton.styleFrom(
+            backgroundColor: Colors.white.withOpacity(0.05),
+            padding: const EdgeInsets.all(12),
+          ),
+        ),
+        const SizedBox(height: 24),
+        const Text(
+          'Join the Network',
+          style: TextStyle(color: Colors.white, fontSize: 32, fontWeight: FontWeight.w900, letterSpacing: -0.5),
+        ),
+        const Text(
+          'Verify your identity to get started',
+          style: TextStyle(color: Colors.white54, fontSize: 16),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSignupForm() {
+    return GlassCard(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _buildField(
+            controller: _usernameCtrl,
+            label: 'USERNAME',
+            icon: Icons.person_outline_rounded,
+            validator: (v) => (v == null || v.trim().isEmpty) ? 'Username is required' : null,
+          ),
+          const SizedBox(height: 16),
+          _buildField(
+            controller: _emailCtrl,
+            label: 'EMAIL ADDRESS',
+            icon: Icons.alternate_email_rounded,
+            keyboardType: TextInputType.emailAddress,
+            validator: (v) {
+              if (v == null || v.trim().isEmpty) return 'Email is required';
+              if (!v.contains('@')) return 'Enter a valid email';
+              return null;
+            },
+          ),
+          const SizedBox(height: 16),
+          _buildField(
+            controller: _phoneCtrl,
+            label: 'PHONE NUMBER',
+            icon: Icons.phone_android_rounded,
+            keyboardType: TextInputType.phone,
+            validator: (v) => (v == null || v.trim().isEmpty) ? 'Phone is required' : null,
+          ),
+          const SizedBox(height: 16),
+          _buildField(
+            controller: _passwordCtrl,
+            label: 'SECURE PASSWORD',
+            icon: Icons.lock_outline_rounded,
+            obscureText: true,
+            validator: (v) {
+              if (v == null || v.length < 6) return 'Minimum 6 characters';
+              return null;
+            },
+          ),
+          const SizedBox(height: 16),
+          _buildField(
+            controller: _confirmPasswordCtrl,
+            label: 'CONFIRM PASSWORD',
+            icon: Icons.shield_outlined,
+            obscureText: true,
+            validator: (v) {
+              if (v != _passwordCtrl.text) return 'Passwords do not match';
+              return null;
+            },
+          ),
+          const SizedBox(height: 24),
+          _buildOtpSection(),
+          const SizedBox(height: 32),
+          _buildSubmitButton(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildOtpSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: _buildField(
+                controller: _otpCtrl,
+                label: 'OTP CODE',
+                icon: Icons.verified_user_outlined,
+                keyboardType: TextInputType.number,
+                validator: (v) {
+                  if (v == null || v.trim().isEmpty) return 'Required';
+                  if (v.trim().length != 6) return '6 digits';
+                  return null;
+                },
+              ),
+            ),
+            const SizedBox(width: 12),
+            SizedBox(
+              height: 56,
+              child: OutlinedButton(
+                onPressed: _isLoading ? null : _sendOtp,
+                style: OutlinedButton.styleFrom(
+                  side: BorderSide(color: _otpSent ? Colors.white24 : AppGradients.cyanMint),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                  foregroundColor: _otpSent ? Colors.white70 : AppGradients.cyanMint,
+                ),
+                child: Text(_otpSent ? 'RESEND' : 'GET CODE'),
+              ),
+            ),
+          ],
+        ),
+        if (_otpSent) ...[
+          const SizedBox(height: 8),
+          const Text(
+            'Code sent to your email address',
+            style: TextStyle(color: AppGradients.cyanMint, fontSize: 11, fontWeight: FontWeight.bold),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ],
+    );
+  }
 
   Widget _buildField({
     required TextEditingController controller,
     required String label,
     required IconData icon,
-    String? hint,
+    bool obscureText = false,
     String? Function(String?)? validator,
     TextInputType? keyboardType,
-    List<TextInputFormatter>? inputFormatters,
-    bool obscureText = false,
-    int maxLines = 1,
   }) {
-    return TextFormField(
-      controller: controller,
-      keyboardType: keyboardType,
-      inputFormatters: inputFormatters,
-      maxLines: maxLines,
-      obscureText: obscureText,
-      style: const TextStyle(color: Colors.white),
-      validator: validator,
-      decoration: InputDecoration(
-        labelText: label,
-        hintText: hint,
-        hintStyle: const TextStyle(color: Colors.white30),
-        labelStyle: const TextStyle(color: Colors.white70),
-        prefixIcon: Icon(icon, color: Colors.tealAccent, size: 20),
-        filled: true,
-        fillColor: Colors.white.withValues(alpha: 0.06),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide.none,
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(
-            color: Colors.white.withValues(alpha: 0.1),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label, style: const TextStyle(color: Colors.white38, fontSize: 10, fontWeight: FontWeight.w900, letterSpacing: 1.5)),
+        const SizedBox(height: 8),
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.03),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: Colors.white.withOpacity(0.08)),
+          ),
+          child: TextFormField(
+            controller: controller,
+            obscureText: obscureText,
+            validator: validator,
+            keyboardType: keyboardType,
+            style: const TextStyle(color: Colors.white, fontSize: 15),
+            decoration: InputDecoration(
+              prefixIcon: Icon(icon, color: AppGradients.cyanMint.withOpacity(0.5), size: 18),
+              border: InputBorder.none,
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+              errorStyle: const TextStyle(height: 0),
+            ),
           ),
         ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Colors.tealAccent, width: 1.5),
+      ],
+    );
+  }
+
+  Widget _buildSubmitButton() {
+    return Container(
+      height: 56,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        gradient: AppGradients.cyanMintGradient,
+        boxShadow: [
+          BoxShadow(color: AppGradients.cyanMint.withOpacity(0.2), blurRadius: 20, offset: const Offset(0, 10)),
+        ],
+      ),
+      child: ElevatedButton(
+        onPressed: _isLoading ? null : _submit,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.transparent,
+          shadowColor: Colors.transparent,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         ),
-        errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Colors.redAccent),
-        ),
-        focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Colors.redAccent),
-        ),
-        errorStyle: const TextStyle(color: Colors.redAccent),
+        child: _isLoading
+            ? const SizedBox(height: 24, width: 24, child: CircularProgressIndicator(color: Colors.black, strokeWidth: 2))
+            : const Text(
+                'VERIFY & CREATE ACCOUNT',
+                style: TextStyle(color: Colors.black, fontWeight: FontWeight.w900, letterSpacing: 1),
+              ),
       ),
     );
   }

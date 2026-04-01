@@ -1,163 +1,196 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-/// Single visual language for the doctor app: dark surfaces, teal accent, readable type.
-/// Keeps navigation, forms, and feedback predictable across auth, tabs, and KYC.
+/// Single visual language for the doctor app: premium midnight surfaces, 
+/// aurora accents, and glassmorphism.
 abstract final class DoctorTheme {
-  static const Color scaffoldBackground = Color(0xFF0A0E1A);
-  static const Color surfaceElevated = Color(0xFF0D1220);
-  static const Color accent = Color(0xFF64FFDA);
+  // Base Palette
+  static const Color scaffoldBackground = Color(0xFF0B1426);
+  static const Color surfaceElevated = Color(0xFF101D35);
+  
+  // Aurora Accents
+  static const Color accent = Color(0xFF64FFDA); // Original Mint
+  static const Color accentCyan = Color(0xFF4DD0E1);
+  static const Color accentLavender = Color(0xFFB388FF);
+  static const Color accentAmber = Color(0xFFFFD54F);
+  
+  // Typography Tokens
+  static const Color textPrimary = Color(0xFFF0F4FF);
+  static const Color textSecondary = Color(0xFF8B9CC7);
+  static const Color textTertiary = Color(0xFF576490);
+  
+  // Glassmorphism Tokens
+  static const Color glassSurface = Color(0xFF162040);
+  static const Color glassStroke = Color(0x1AF0F4FF);
 
   static ThemeData dark() {
-    final base = ThemeData(
+    return ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
-      visualDensity: VisualDensity.adaptivePlatformDensity,
-    );
-
-    final scheme = ColorScheme.dark(
-      primary: accent,
-      onPrimary: const Color(0xFF0A1A18),
-      secondary: accent.withValues(alpha: 0.85),
-      onSecondary: const Color(0xFF0A1A18),
-      surface: scaffoldBackground,
-      onSurface: Colors.white,
-      surfaceContainerHighest: surfaceElevated,
-      error: const Color(0xFFFF6B6B),
-      onError: Colors.black,
-      outline: Colors.white.withValues(alpha: 0.12),
-    );
-
-    return base.copyWith(
-      colorScheme: scheme,
       scaffoldBackgroundColor: scaffoldBackground,
-      splashColor: accent.withValues(alpha: 0.12),
-      highlightColor: accent.withValues(alpha: 0.08),
-      pageTransitionsTheme: const PageTransitionsTheme(
-        builders: {
-          TargetPlatform.android: ZoomPageTransitionsBuilder(),
-          TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
-          TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
-        },
+      primaryColor: accent,
+      
+      colorScheme: const ColorScheme.dark(
+        primary: accent,
+        secondary: accentCyan,
+        tertiary: accentLavender,
+        surface: surfaceElevated,
+        error: Color(0xFFFF6B6B),
       ),
-      appBarTheme: AppBarTheme(
-        backgroundColor: surfaceElevated,
-        foregroundColor: Colors.white,
-        elevation: 0,
-        scrolledUnderElevation: 0,
-        centerTitle: true,
-        titleTextStyle: const TextStyle(
-          color: Colors.white,
+
+      textTheme: TextTheme(
+        displayLarge: GoogleFonts.inter(
+          fontSize: 32,
+          fontWeight: FontWeight.w800,
+          color: textPrimary,
+          letterSpacing: -0.5,
+        ),
+        displayMedium: GoogleFonts.inter(
+          fontSize: 24,
+          fontWeight: FontWeight.w700,
+          color: textPrimary,
+          letterSpacing: -0.5,
+        ),
+        headlineMedium: GoogleFonts.inter(
+          fontSize: 20,
+          fontWeight: FontWeight.w700,
+          color: textPrimary,
+        ),
+        titleLarge: GoogleFonts.inter(
           fontSize: 18,
           fontWeight: FontWeight.w600,
+          color: textPrimary,
+        ),
+        bodyLarge: GoogleFonts.inter(
+          fontSize: 16,
+          fontWeight: FontWeight.w400,
+          color: textSecondary,
+        ),
+        bodyMedium: GoogleFonts.inter(
+          fontSize: 14,
+          fontWeight: FontWeight.w400,
+          color: textSecondary,
+        ),
+        labelLarge: GoogleFonts.inter(
+          fontSize: 12,
+          fontWeight: FontWeight.w600,
+          color: textTertiary,
+          letterSpacing: 0.5,
         ),
       ),
-      cardTheme: CardThemeData(
-        color: Colors.white.withValues(alpha: 0.04),
+
+      cardTheme: const CardThemeData(
+        color: glassSurface,
         elevation: 0,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(14),
-          side: BorderSide(color: Colors.white.withValues(alpha: 0.08)),
+          borderRadius: BorderRadius.all(Radius.circular(20)),
+          side: BorderSide(color: glassStroke),
         ),
       ),
-      dividerTheme: DividerThemeData(
-        color: Colors.white.withValues(alpha: 0.08),
+
+      appBarTheme: AppBarTheme(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        centerTitle: false,
+        titleTextStyle: GoogleFonts.inter(
+          fontSize: 20,
+          fontWeight: FontWeight.w700,
+          color: textPrimary,
+        ),
+        iconTheme: const IconThemeData(color: textPrimary),
+      ),
+      
+      dividerTheme: const DividerThemeData(
+        color: glassStroke,
         thickness: 1,
       ),
-      snackBarTheme: SnackBarThemeData(
-        behavior: SnackBarBehavior.floating,
-        elevation: 4,
+
+      dialogTheme: const DialogThemeData(
         backgroundColor: surfaceElevated,
-        contentTextStyle: const TextStyle(
-          color: Colors.white,
-          fontSize: 15,
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24))),
+      ),
+
+      bottomSheetTheme: const BottomSheetThemeData(
+        backgroundColor: surfaceElevated,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
         ),
       ),
-      dialogTheme: DialogThemeData(
-        backgroundColor: surfaceElevated,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      ),
-      bottomSheetTheme: BottomSheetThemeData(
-        backgroundColor: surfaceElevated,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-        ),
-      ),
+
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
           backgroundColor: accent,
           foregroundColor: Colors.black87,
-          disabledBackgroundColor: Colors.white24,
-          minimumSize: const Size(double.infinity, 48),
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+          disabledBackgroundColor: glassSurface,
+          minimumSize: const Size(double.infinity, 54),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(16),
+          ),
+          textStyle: GoogleFonts.inter(
+            fontSize: 16,
+            fontWeight: FontWeight.w700,
           ),
         ),
       ),
+
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
-          foregroundColor: accent,
-          side: BorderSide(color: accent.withValues(alpha: 0.5)),
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+          foregroundColor: textPrimary,
+          side: const BorderSide(color: glassStroke),
+          minimumSize: const Size(double.infinity, 54),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(16),
           ),
         ),
       ),
-      textButtonTheme: TextButtonThemeData(
-        style: TextButton.styleFrom(
-          foregroundColor: accent,
-        ),
-      ),
+
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: Colors.white.withValues(alpha: 0.06),
-        labelStyle: TextStyle(color: Colors.white.withValues(alpha: 0.7)),
-        hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.35)),
+        fillColor: glassSurface.withValues(alpha: 0.1),
+        hintStyle: const TextStyle(color: textTertiary),
+        labelStyle: const TextStyle(color: textSecondary),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide.none,
+          borderRadius: BorderRadius.circular(16),
+          borderSide: const BorderSide(color: glassStroke),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(
-            color: Colors.white.withValues(alpha: 0.1),
-          ),
+          borderRadius: BorderRadius.circular(16),
+          borderSide: const BorderSide(color: glassStroke),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(16),
           borderSide: const BorderSide(color: accent, width: 1.5),
         ),
         errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(16),
           borderSide: const BorderSide(color: Color(0xFFFF6B6B)),
         ),
-        focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Color(0xFFFF6B6B), width: 1.5),
-        ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        contentPadding: const EdgeInsets.all(18),
       ),
-      listTileTheme: ListTileThemeData(
-        iconColor: Colors.white70,
-        textColor: Colors.white,
-        titleTextStyle: const TextStyle(
+
+      listTileTheme: const ListTileThemeData(
+        iconColor: textSecondary,
+        textColor: textPrimary,
+        titleTextStyle: TextStyle(
           fontSize: 16,
-          fontWeight: FontWeight.w500,
+          fontWeight: FontWeight.w600,
         ),
         subtitleTextStyle: TextStyle(
           fontSize: 13,
-          color: Colors.white.withValues(alpha: 0.55),
+          color: textSecondary,
         ),
       ),
-      iconTheme: const IconThemeData(color: Colors.white70),
-      textTheme: base.textTheme.apply(
-        bodyColor: Colors.white,
-        displayColor: Colors.white,
-      ),
+
+      iconTheme: const IconThemeData(color: textPrimary, size: 24),
     );
   }
+
+  static const LinearGradient profileGradient = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [
+      accentCyan,
+      Color(0xFF00CBA9),
+    ],
+  );
 }

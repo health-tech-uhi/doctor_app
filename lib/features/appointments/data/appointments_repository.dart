@@ -37,4 +37,25 @@ class AppointmentsRepository {
     }
     return PaginatedResult.fromJson(data, Appointment.fromJson);
   }
+
+  /// PUT /api/appointments/:id/status — approve (`accepted`) or decline (`rejected`).
+  Future<Appointment> updateStatus(
+    String id, {
+    required String status,
+    String? rejectionReason,
+  }) async {
+    final response = await _dio.put<Map<String, dynamic>>(
+      '/api/appointments/$id/status',
+      data: {
+        'status': status,
+        if (rejectionReason != null && rejectionReason.isNotEmpty)
+          'rejection_reason': rejectionReason,
+      },
+    );
+    final data = response.data;
+    if (data == null) {
+      throw StateError('Empty response from status update');
+    }
+    return Appointment.fromJson(data);
+  }
 }

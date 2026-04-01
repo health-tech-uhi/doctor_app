@@ -51,24 +51,22 @@ class DoctorRepository {
     String? aadhaarLastFour,
   }) async {
     final response = await _dio.post('/api/doctors/register', data: {
-      if (firstName != null) 'first_name': firstName,
-      if (lastName != null) 'last_name': lastName,
+      'first_name': ?firstName,
+      'last_name': ?lastName,
       'specialization': specialization,
-      if (qualification != null) 'qualification': qualification,
-      if (experienceYears != null) 'experience_years': experienceYears,
-      if (bio != null) 'bio': bio,
-      if (languagesSpoken != null) 'languages_spoken': languagesSpoken,
+      'qualification': ?qualification,
+      'experience_years': ?experienceYears,
+      'bio': ?bio,
+      'languages_spoken': ?languagesSpoken,
       'license_number': licenseNumber,
-      if (licenseIssuingAuthority != null)
-        'license_issuing_authority': licenseIssuingAuthority,
+      'license_issuing_authority': ?licenseIssuingAuthority,
       'consultation_fee': consultationFee,
-      if (degree != null) 'degree': degree,
-      if (degreeInstitution != null) 'degree_institution': degreeInstitution,
-      if (degreeYear != null) 'degree_year': degreeYear,
-      if (registrationYear != null) 'registration_year': registrationYear,
-      if (stateMedicalCouncil != null)
-        'state_medical_council': stateMedicalCouncil,
-      if (aadhaarLastFour != null) 'aadhaar_last_four': aadhaarLastFour,
+      'degree': ?degree,
+      'degree_institution': ?degreeInstitution,
+      'degree_year': ?degreeYear,
+      'registration_year': ?registrationYear,
+      'state_medical_council': ?stateMedicalCouncil,
+      'aadhaar_last_four': ?aadhaarLastFour,
     });
     return DoctorProfile.fromJson(response.data as Map<String, dynamic>);
   }
@@ -111,20 +109,19 @@ class DoctorRepository {
     int? registrationYear,
   }) async {
     final response = await _dio.put('/api/doctors/profile', data: {
-      if (firstName != null) 'first_name': firstName,
-      if (lastName != null) 'last_name': lastName,
+      'first_name': ?firstName,
+      'last_name': ?lastName,
       'specialization': specialization,
-      if (qualification != null) 'qualification': qualification,
-      if (experienceYears != null) 'experience_years': experienceYears,
-      if (bio != null) 'bio': bio,
-      if (licenseNumber != null) 'license_number': licenseNumber,
-      if (stateMedicalCouncil != null)
-        'state_medical_council': stateMedicalCouncil,
+      'qualification': ?qualification,
+      'experience_years': ?experienceYears,
+      'bio': ?bio,
+      'license_number': ?licenseNumber,
+      'state_medical_council': ?stateMedicalCouncil,
       'consultation_fee': consultationFee,
-      if (degree != null) 'degree': degree,
-      if (degreeInstitution != null) 'degree_institution': degreeInstitution,
-      if (degreeYear != null) 'degree_year': degreeYear,
-      if (registrationYear != null) 'registration_year': registrationYear,
+      'degree': ?degree,
+      'degree_institution': ?degreeInstitution,
+      'degree_year': ?degreeYear,
+      'registration_year': ?registrationYear,
     });
     return DoctorProfile.fromJson(response.data as Map<String, dynamic>);
   }
@@ -153,7 +150,7 @@ class DoctorRepository {
       'document_type': documentType,
       'file_name': fileName,
       'garage_object_uuid': garageObjectUuid,
-      if (mimeType != null) 'mime_type': mimeType,
+      'mime_type': ?mimeType,
     });
     return response.data as Map<String, dynamic>;
   }

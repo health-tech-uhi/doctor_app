@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/ui/feedback/app_status_panel.dart';
+import '../../../../core/theme/doctor_theme.dart';
+import '../../../../core/ui/glass/aurora_background.dart';
+import '../../../../core/ui/glass/glass_card.dart';
 import '../../../doctor/providers/doctor_providers.dart';
 import '../../../auth/providers/auth_provider.dart';
 import '../../../doctor/data/doctor_repository.dart';
 
-/// Profile tab — shows the doctor's personal & professional details with logout.
 class ProfileTab extends ConsumerWidget {
   const ProfileTab({super.key});
 
@@ -15,97 +16,99 @@ class ProfileTab extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authNotifierProvider);
     if (authState.requiresProfileCompletion) {
-      return CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(
-            child: _buildErrorState(
-              context,
-              ref,
-              const DoctorProfileNotFoundException(),
-            ),
-          ),
-        ],
+      return AuroraBackground(
+        child: Center(
+          child: _buildErrorState(context, ref, const DoctorProfileNotFoundException()),
+        ),
       );
     }
 
     final profileAsync = ref.watch(doctorProfileProvider);
 
-    return CustomScrollView(
-      slivers: [
-        SliverToBoxAdapter(
-          child: profileAsync.when(
-            loading: () => _buildSkeleton(),
-            error: (e, _) => _buildErrorState(context, ref, e),
-            data: (profile) => _buildContent(context, ref, profile),
-          ),
+    return Scaffold(
+      backgroundColor: DoctorTheme.scaffoldBackground,
+      body: AuroraBackground(
+        child: profileAsync.when(
+          loading: () => _buildSkeleton(),
+          error: (e, _) => _buildErrorState(context, ref, e),
+          data: (profile) => _buildContent(context, ref, profile),
         ),
-      ],
+      ),
     );
   }
 
   Widget _buildContent(BuildContext context, WidgetRef ref, dynamic profile) {
-    return Column(
-      children: [
-        _buildHero(profile),
-        _buildInfoSection(profile),
-        _buildSettingsList(context, ref),
-        const SizedBox(height: 32),
-      ],
+    return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
+      padding: const EdgeInsets.fromLTRB(24, 0, 24, 120),
+      child: Column(
+        children: [
+          const SizedBox(height: 72),
+          _buildHero(profile),
+          const SizedBox(height: 32),
+          _buildInfoSection(profile),
+          const SizedBox(height: 32),
+          _buildSettingsList(context, ref),
+        ],
+      ),
     );
   }
 
   Widget _buildHero(dynamic profile) {
-    final initials = _initials(profile.fullName);
+    return Column(
+      children: [
+        _buildLargeAvatar(profile.fullName),
+        const SizedBox(height: 20),
+        Text(
+          'Dr. ${profile.fullName}',
+          style: const TextStyle(
+            color: DoctorTheme.textPrimary, 
+            fontSize: 28, 
+            fontWeight: FontWeight.w800,
+            letterSpacing: -0.6,
+          ),
+        ),
+        const SizedBox(height: 6),
+        Text(
+          profile.specialization.toUpperCase(),
+          style: const TextStyle(
+            color: DoctorTheme.accentCyan, 
+            fontSize: 12, 
+            fontWeight: FontWeight.w800,
+            letterSpacing: 1.2,
+          ),
+        ),
+        const SizedBox(height: 20),
+        _verifiedBadge(profile.verificationStatus as String?),
+      ],
+    );
+  }
+
+  Widget _buildLargeAvatar(String name) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(24, 64, 24, 32),
-      child: Column(
-        children: [
-          Container(
-            width: 90,
-            height: 90,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: const LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [Colors.tealAccent, Color(0xFF00897B)],
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.tealAccent.withValues(alpha: 0.3),
-                  blurRadius: 24,
-                  spreadRadius: 2,
-                ),
-              ],
-            ),
-            child: Center(
-              child: Text(
-                initials,
-                style: const TextStyle(
-                  color: Colors.black87,
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
+      width: 110,
+      height: 110,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: DoctorTheme.profileGradient,
+        border: Border.all(color: DoctorTheme.accentCyan.withOpacity(0.3), width: 3),
+        boxShadow: [
+          BoxShadow(
+            color: DoctorTheme.accentCyan.withOpacity(0.15), 
+            blurRadius: 30, 
+            spreadRadius: 5,
           ),
-          const SizedBox(height: 16),
-          Text(
-            'Dr. ${profile.fullName}',
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            profile.specialization,
-            style: const TextStyle(color: Colors.tealAccent, fontSize: 14),
-          ),
-          const SizedBox(height: 8),
-          _verifiedBadge(profile.verificationStatus as String?),
         ],
+      ),
+      alignment: Alignment.center,
+      child: Text(
+        _initials(name),
+        style: const TextStyle(
+          color: Colors.white, 
+          fontSize: 36, 
+          fontWeight: FontWeight.w800,
+          letterSpacing: 1.0,
+        ),
       ),
     );
   }
@@ -113,40 +116,24 @@ class ProfileTab extends ConsumerWidget {
   Widget _verifiedBadge(String? verificationStatus) {
     final status = (verificationStatus ?? 'pending').toLowerCase();
     final isVerified = status == 'verified';
-    final isRejected = status == 'rejected';
-    final label = isVerified
-        ? 'KYC Verified'
-        : isRejected
-            ? 'KYC Rejected'
-            : 'KYC Pending';
-    final color = isVerified
-        ? Colors.tealAccent
-        : isRejected
-            ? Colors.redAccent
-            : Colors.orangeAccent;
+    final label = isVerified ? 'Verified Professional' : 'Verification Pending';
+    final color = isVerified ? DoctorTheme.accentCyan : DoctorTheme.accentAmber;
+
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: color.withValues(alpha: 0.3)),
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(30),
+        border: Border.all(color: color.withOpacity(0.2)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            isVerified ? Icons.verified_rounded : Icons.pending_actions_rounded,
-            color: color,
-            size: 14,
-          ),
-          const SizedBox(width: 5),
+          Icon(isVerified ? Icons.verified_user_rounded : Icons.pending_actions_rounded, color: color, size: 14),
+          const SizedBox(width: 8),
           Text(
-            label,
-            style: TextStyle(
-              color: color,
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-            ),
+            label, 
+            style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w800, letterSpacing: 0.2)
           ),
         ],
       ),
@@ -154,253 +141,210 @@ class ProfileTab extends ConsumerWidget {
   }
 
   Widget _buildInfoSection(dynamic profile) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Professional Info',
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Padding(
+          padding: EdgeInsets.only(left: 4),
+          child: Text(
+            'PROFESSIONAL OVERVIEW',
             style: TextStyle(
-              color: Colors.white60,
-              fontSize: 13,
-              fontWeight: FontWeight.w500,
-              letterSpacing: 0.4,
+              color: DoctorTheme.textTertiary, 
+              fontSize: 11, 
+              fontWeight: FontWeight.w800, 
+              letterSpacing: 1.5,
             ),
           ),
-          const SizedBox(height: 10),
-          _infoRow(Icons.work_outline, 'Experience',
-              '${profile.experienceYears ?? 'N/A'} years'),
-          _infoRow(Icons.currency_rupee, 'Consultation Fee',
-              '₹${profile.consultationFeeInr?.toStringAsFixed(0) ?? 'N/A'}'),
-          _infoRow(Icons.badge_outlined, 'License No.',
-              _displayOrMissing(profile.licenseNumber)),
-          _infoRow(Icons.verified_user_outlined, 'License Authority',
-              _displayOrMissing(profile.licenseIssuingAuthority)),
-          _infoRow(Icons.school_outlined, 'Degree', _displayOrMissing(profile.degree)),
-          _infoRow(Icons.account_balance_outlined, 'Degree Institution',
-              _displayOrMissing(profile.degreeInstitution)),
-          _infoRow(Icons.calendar_month_outlined, 'Registration Year',
-              profile.registrationYear?.toString() ?? 'Not provided'),
-          _infoRow(Icons.gavel_outlined, 'Medical Council',
-              _displayOrMissing(profile.stateMedicalCouncil)),
-          _infoRow(Icons.notes_outlined, 'Bio', _displayOrMissing(profile.bio)),
-          const SizedBox(height: 24),
-        ],
-      ),
+        ),
+        const SizedBox(height: 16),
+        _infoRow(Icons.history_edu_rounded, 'Experience', '${profile.experienceYears ?? 'N/A'} Years'),
+        _infoRow(Icons.currency_rupee_rounded, 'Consultation', '₹${profile.consultationFeeInr?.toStringAsFixed(0) ?? 'N/A'}'),
+        _infoRow(Icons.document_scanner_rounded, 'License No.', _displayOrMissing(profile.licenseNumber)),
+      ],
     );
   }
 
   Widget _infoRow(IconData icon, String label, String value) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 10),
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.04),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
-      ),
-      child: Row(
-        children: [
-          Icon(icon, color: Colors.white38, size: 18),
-          const SizedBox(width: 12),
-          Text(
-            label,
-            style: const TextStyle(color: Colors.white54, fontSize: 13),
-          ),
-          const Spacer(),
-          Text(
-            value,
-            style: const TextStyle(
-                color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSettingsList(BuildContext context, WidgetRef ref) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Settings',
-            style: TextStyle(
-              color: Colors.white60,
-              fontSize: 13,
-              fontWeight: FontWeight.w500,
-              letterSpacing: 0.4,
-            ),
-          ),
-          const SizedBox(height: 10),
-          _settingRow(
-            icon: Icons.edit_note_rounded,
-            label: 'Edit Profile / Fill Missing Info',
-            // Push (not go) so the dashboard shell stays under this route and Back returns to tabs.
-            onTap: () => context.push('/profile/edit'),
-          ),
-          _settingRow(
-            icon: Icons.verified_user_outlined,
-            label: 'Complete KYC',
-            onTap: () => context.push('/profile/kyc'),
-          ),
-          _settingRow(
-            icon: Icons.notifications_outlined,
-            label: 'Notifications',
-            onTap: () {},
-          ),
-          _settingRow(
-            icon: Icons.lock_outline,
-            label: 'Privacy & Security',
-            onTap: () {},
-          ),
-          _settingRow(
-            icon: Icons.help_outline,
-            label: 'Help & Support',
-            onTap: () {},
-          ),
-          const SizedBox(height: 16),
-          // Logout
-          GestureDetector(
-            onTap: () => ref.read(authNotifierProvider.notifier).logout(),
-            child: Container(
-              padding: const EdgeInsets.all(14),
-              decoration: BoxDecoration(
-                color: Colors.redAccent.withValues(alpha: 0.08),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                    color: Colors.redAccent.withValues(alpha: 0.2)),
-              ),
-              child: const Row(
-                children: [
-                  Icon(Icons.logout_rounded,
-                      color: Colors.redAccent, size: 20),
-                  SizedBox(width: 12),
-                  Text(
-                    'Log Out',
-                    style: TextStyle(
-                      color: Colors.redAccent,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  Spacer(),
-                  Icon(Icons.arrow_forward_ios,
-                      color: Colors.redAccent, size: 14),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _settingRow(
-      {required IconData icon,
-      required String label,
-      required VoidCallback onTap}) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 10),
-        padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.04),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
-        ),
+      padding: const EdgeInsets.only(bottom: 12),
+      child: GlassCard(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         child: Row(
           children: [
-            Icon(icon, color: Colors.white54, size: 20),
-            const SizedBox(width: 14),
-            Expanded(
-              child: Text(
-                label,
-                style: const TextStyle(color: Colors.white, fontSize: 15),
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: DoctorTheme.accentCyan.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12),
               ),
+              child: Icon(icon, color: DoctorTheme.accentCyan, size: 18),
             ),
-            const Icon(Icons.arrow_forward_ios,
-                color: Colors.white24, size: 14),
+            const SizedBox(width: 16),
+            Text(label, style: const TextStyle(color: DoctorTheme.textSecondary, fontSize: 14, fontWeight: FontWeight.w500)),
+            const Spacer(),
+            Text(
+              value, 
+              style: const TextStyle(
+                color: DoctorTheme.textPrimary, 
+                fontWeight: FontWeight.w700, 
+                fontSize: 14,
+              )
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildSkeleton() {
+  Widget _buildSettingsList(BuildContext context, WidgetRef ref) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 64),
-        Center(
-          child: Container(
-            width: 90,
-            height: 90,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.white.withValues(alpha: 0.06),
+        const Padding(
+          padding: EdgeInsets.only(left: 4),
+          child: Text(
+            'ACCOUNT & PREFERENCES',
+            style: TextStyle(
+              color: DoctorTheme.textTertiary, 
+              fontSize: 11, 
+              fontWeight: FontWeight.w800, 
+              letterSpacing: 1.5,
             ),
           ),
         ),
         const SizedBox(height: 16),
-        Center(
-          child: Container(
-            width: 180,
-            height: 22,
-            color: Colors.white.withValues(alpha: 0.06),
-          ),
-        ),
-        const SizedBox(height: 60),
-        const Center(
-          child: CircularProgressIndicator(color: Colors.tealAccent),
-        ),
+        _settingRow(context, Icons.person_outline_rounded, 'Edit Profile Details', () => context.push('/profile/edit')),
+        _settingRow(context, Icons.verified_user_outlined, 'KYC & Verification', () => context.push('/profile/kyc')),
+        _settingRow(context, Icons.notifications_none_rounded, 'Reminders & Notifications', () {}),
+        const SizedBox(height: 24),
+        _buildLogoutButton(ref),
       ],
     );
   }
 
+  Widget _settingRow(BuildContext context, IconData icon, String label, VoidCallback onTap) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: GlassCard(
+        onTap: onTap,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        child: Row(
+          children: [
+            Icon(icon, color: DoctorTheme.textTertiary, size: 20),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Text(
+                label, 
+                style: const TextStyle(
+                  color: DoctorTheme.textPrimary, 
+                  fontSize: 15, 
+                  fontWeight: FontWeight.w600,
+                )
+              )
+            ),
+            const Icon(Icons.chevron_right_rounded, color: DoctorTheme.textTertiary, size: 20),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLogoutButton(WidgetRef ref) {
+    return GlassCard(
+      onTap: () => ref.read(authNotifierProvider.notifier).logout(),
+      color: const Color(0xFFFF4B4B).withOpacity(0.06),
+      padding: const EdgeInsets.symmetric(vertical: 18),
+      child: const Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.power_settings_new_rounded, color: Color(0xFFFF4B4B), size: 20),
+          SizedBox(width: 12),
+          Text(
+            'Logout', 
+            style: TextStyle(color: Color(0xFFFF4B4B), fontWeight: FontWeight.w800, fontSize: 16)
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSkeleton() {
+    return const Center(
+      child: CircularProgressIndicator(
+        strokeWidth: 2, 
+        color: DoctorTheme.accentCyan,
+      ),
+    );
+  }
+
   Widget _buildErrorState(BuildContext context, WidgetRef ref, Object error) {
-    final profileMissing = error is DoctorProfileNotFoundException;
-    return Center(
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.only(top: 48, bottom: 24),
-        child: AppStatusPanel(
-          icon: profileMissing ? Icons.person_add_alt_1 : Icons.error_outline,
-          title: profileMissing
-              ? 'Profile not set up yet'
-              : 'Couldn\'t load your profile',
-          message: profileMissing
-              ? 'Add your professional details so patients can find you and you can finish verification.'
-              : 'Check your connection and try again. If this keeps happening, contact support.',
-          iconColor: profileMissing
-              ? Theme.of(context).colorScheme.primary
-              : Theme.of(context).colorScheme.error,
-          primaryAction: SizedBox(
-            width: double.infinity,
-            child: FilledButton.icon(
-              onPressed: profileMissing
-                  ? () => context.push('/complete-profile')
-                  : () => ref.refresh(doctorProfileProvider),
-              icon: Icon(profileMissing ? Icons.edit_note : Icons.refresh),
-              label: Text(profileMissing ? 'Complete profile' : 'Retry'),
+    final isMissing = error is DoctorProfileNotFoundException;
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 40),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(24),
+            decoration: BoxDecoration(
+              color: DoctorTheme.accentCyan.withOpacity(0.05),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              isMissing ? Icons.person_search_rounded : Icons.cloud_off_rounded, 
+              size: 56, 
+              color: DoctorTheme.accentCyan,
             ),
           ),
-        ),
+          const SizedBox(height: 32),
+          Text(
+            isMissing ? 'Profile Incomplete' : 'Network Error',
+            style: const TextStyle(
+              color: DoctorTheme.textPrimary, 
+              fontSize: 24, 
+              fontWeight: FontWeight.w800,
+              letterSpacing: -0.5,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            isMissing 
+              ? 'Please finalize your professional details to access your dashboard.' 
+              : 'Unable to reach clinical servers. Please check your connection.',
+            textAlign: TextAlign.center,
+            style: const TextStyle(color: DoctorTheme.textSecondary, fontSize: 14, height: 1.5),
+          ),
+          const SizedBox(height: 40),
+          SizedBox(
+            width: double.infinity,
+            height: 54,
+            child: ElevatedButton(
+              onPressed: isMissing ? () => context.push('/complete-profile') : () => ref.refresh(doctorProfileProvider),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: DoctorTheme.accentCyan,
+                foregroundColor: Colors.black,
+                elevation: 0,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              ),
+              child: Text(
+                isMissing ? 'Finalize Profile' : 'Retry Connection',
+                style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
 
   String _initials(String fullName) {
     final parts = fullName.trim().split(' ');
-    if (parts.length >= 2) {
-      return '${parts.first[0]}${parts.last[0]}'.toUpperCase();
-    }
+    if (parts.length >= 2) return '${parts.first[0]}${parts.last[0]}'.toUpperCase();
     return fullName.isNotEmpty ? fullName[0].toUpperCase() : '?';
   }
 
   String _displayOrMissing(String? value) {
-    if (value == null || value.trim().isEmpty) return 'Not provided';
+    if (value == null || value.trim().isEmpty) return 'Not Verified';
     return value;
   }
 }

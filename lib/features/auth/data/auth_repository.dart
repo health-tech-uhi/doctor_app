@@ -92,8 +92,8 @@ class AuthRepository {
       'email': email,
       'phone': phone,
       'password': password,
-      if (firstName != null) 'first_name': firstName,
-      if (lastName != null) 'last_name': lastName,
+      'first_name': ?firstName,
+      'last_name': ?lastName,
     });
   }
 
