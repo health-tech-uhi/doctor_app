@@ -155,7 +155,8 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
 
     /// Auth already ran GET /api/doctors/profile during hydration; do not block the UI on
     /// [AsyncLoading] while the provider catches up (avoids long spinner when opening this route).
-    final knownMissingProfile = authState.requiresProfileCompletion ||
+    final knownMissingProfile =
+        authState.requiresProfileCompletion ||
         profileAsync.maybeWhen(
           error: (e, _) => e is DoctorProfileNotFoundException,
           orElse: () => false,
@@ -188,7 +189,10 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
               child: AppStatusPanel(
                 icon: Icons.cloud_off_rounded,
                 title: 'Couldn\'t load profile',
-                message: userFacingErrorMessage(e, context: ErrorUxContext.profile),
+                message: userFacingErrorMessage(
+                  e,
+                  context: ErrorUxContext.profile,
+                ),
                 iconColor: Theme.of(context).colorScheme.error,
                 primaryAction: AdaptivePrimaryButton(
                   onPressed: () => ref.invalidate(doctorProfileProvider),
@@ -267,11 +271,7 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
                 title: 'Professional Information',
                 children: [
                   _field(_licenseCtrl, 'License number', required: true),
-                  _field(
-                    _councilCtrl,
-                    'State medical council',
-                    required: true,
-                  ),
+                  _field(_councilCtrl, 'State medical council', required: true),
                   _field(_degreeCtrl, 'Degree', required: true),
                   _field(
                     _institutionCtrl,
@@ -296,15 +296,15 @@ class _CompleteProfileScreenState extends ConsumerState<CompleteProfileScreen> {
                         height: 20,
                         child: CircularProgressIndicator(strokeWidth: 2),
                       )
-                    : Text(isUpdateMode || _profileSaved
-                        ? 'Update Profile'
-                        : 'Save Profile'),
+                    : Text(
+                        isUpdateMode || _profileSaved
+                            ? 'Update Profile'
+                            : 'Save Profile',
+                      ),
               ),
               const SizedBox(height: 10),
               OutlinedButton.icon(
-                onPressed: profileReady
-                    ? () => context.push('/kyc')
-                    : null,
+                onPressed: profileReady ? () => context.push('/kyc') : null,
                 icon: const Icon(Icons.verified_user_outlined),
                 label: const Text('Continue to Verification'),
               ),

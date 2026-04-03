@@ -47,10 +47,9 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
     }
     setState(() => _isLoading = true);
     try {
-      await ref.read(authRepositoryProvider).generateOtp(
-            identifier: _emailCtrl.text.trim(),
-            channel: 'Email',
-          );
+      await ref
+          .read(authRepositoryProvider)
+          .generateOtp(identifier: _emailCtrl.text.trim(), channel: 'Email');
       if (mounted) {
         setState(() => _otpSent = true);
         AppSnackBar.show(context, 'OTP sent to your email');
@@ -142,7 +141,11 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
       children: [
         IconButton(
           onPressed: () => context.go('/login'),
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 20),
+          icon: const Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: Colors.white,
+            size: 20,
+          ),
           style: IconButton.styleFrom(
             backgroundColor: Colors.white.withOpacity(0.05),
             padding: const EdgeInsets.all(12),
@@ -151,7 +154,12 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
         const SizedBox(height: 24),
         const Text(
           'Join the Network',
-          style: TextStyle(color: Colors.white, fontSize: 32, fontWeight: FontWeight.w900, letterSpacing: -0.5),
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 32,
+            fontWeight: FontWeight.w900,
+            letterSpacing: -0.5,
+          ),
         ),
         const Text(
           'Verify your identity to get started',
@@ -171,7 +179,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
             controller: _usernameCtrl,
             label: 'USERNAME',
             icon: Icons.person_outline_rounded,
-            validator: (v) => (v == null || v.trim().isEmpty) ? 'Username is required' : null,
+            validator: (v) =>
+                (v == null || v.trim().isEmpty) ? 'Username is required' : null,
           ),
           const SizedBox(height: 16),
           _buildField(
@@ -191,7 +200,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
             label: 'PHONE NUMBER',
             icon: Icons.phone_android_rounded,
             keyboardType: TextInputType.phone,
-            validator: (v) => (v == null || v.trim().isEmpty) ? 'Phone is required' : null,
+            validator: (v) =>
+                (v == null || v.trim().isEmpty) ? 'Phone is required' : null,
           ),
           const SizedBox(height: 16),
           _buildField(
@@ -249,9 +259,15 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
               child: OutlinedButton(
                 onPressed: _isLoading ? null : _sendOtp,
                 style: OutlinedButton.styleFrom(
-                  side: BorderSide(color: _otpSent ? Colors.white24 : AppGradients.cyanMint),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                  foregroundColor: _otpSent ? Colors.white70 : AppGradients.cyanMint,
+                  side: BorderSide(
+                    color: _otpSent ? Colors.white24 : AppGradients.cyanMint,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  foregroundColor: _otpSent
+                      ? Colors.white70
+                      : AppGradients.cyanMint,
                 ),
                 child: Text(_otpSent ? 'RESEND' : 'GET CODE'),
               ),
@@ -262,7 +278,11 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
           const SizedBox(height: 8),
           const Text(
             'Code sent to your email address',
-            style: TextStyle(color: AppGradients.cyanMint, fontSize: 11, fontWeight: FontWeight.bold),
+            style: TextStyle(
+              color: AppGradients.cyanMint,
+              fontSize: 11,
+              fontWeight: FontWeight.bold,
+            ),
             textAlign: TextAlign.center,
           ),
         ],
@@ -281,7 +301,15 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: const TextStyle(color: Colors.white38, fontSize: 10, fontWeight: FontWeight.w900, letterSpacing: 1.5)),
+        Text(
+          label,
+          style: const TextStyle(
+            color: Colors.white38,
+            fontSize: 10,
+            fontWeight: FontWeight.w900,
+            letterSpacing: 1.5,
+          ),
+        ),
         const SizedBox(height: 8),
         Container(
           decoration: BoxDecoration(
@@ -296,9 +324,16 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
             keyboardType: keyboardType,
             style: const TextStyle(color: Colors.white, fontSize: 15),
             decoration: InputDecoration(
-              prefixIcon: Icon(icon, color: AppGradients.cyanMint.withOpacity(0.5), size: 18),
+              prefixIcon: Icon(
+                icon,
+                color: AppGradients.cyanMint.withOpacity(0.5),
+                size: 18,
+              ),
               border: InputBorder.none,
-              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 14,
+              ),
               errorStyle: const TextStyle(height: 0),
             ),
           ),
@@ -314,7 +349,11 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
         borderRadius: BorderRadius.circular(16),
         gradient: AppGradients.cyanMintGradient,
         boxShadow: [
-          BoxShadow(color: AppGradients.cyanMint.withOpacity(0.2), blurRadius: 20, offset: const Offset(0, 10)),
+          BoxShadow(
+            color: AppGradients.cyanMint.withOpacity(0.2),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
         ],
       ),
       child: ElevatedButton(
@@ -322,13 +361,26 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.transparent,
           shadowColor: Colors.transparent,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
         ),
         child: _isLoading
-            ? const SizedBox(height: 24, width: 24, child: CircularProgressIndicator(color: Colors.black, strokeWidth: 2))
+            ? const SizedBox(
+                height: 24,
+                width: 24,
+                child: CircularProgressIndicator(
+                  color: Colors.black,
+                  strokeWidth: 2,
+                ),
+              )
             : const Text(
                 'VERIFY & CREATE ACCOUNT',
-                style: TextStyle(color: Colors.black, fontWeight: FontWeight.w900, letterSpacing: 1),
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: 1,
+                ),
               ),
       ),
     );

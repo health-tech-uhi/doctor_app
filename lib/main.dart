@@ -11,12 +11,8 @@ import 'core/theme/doctor_theme.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
-  
-  runApp(
-    const ProviderScope(
-      child: DoctorApp(),
-    ),
-  );
+
+  runApp(const ProviderScope(child: DoctorApp()));
 }
 
 /// iOS-style overscroll; Android keeps clamping.
@@ -25,11 +21,11 @@ class _AppScrollBehavior extends MaterialScrollBehavior {
 
   @override
   Set<PointerDeviceKind> get dragDevices => {
-        PointerDeviceKind.touch,
-        PointerDeviceKind.mouse,
-        PointerDeviceKind.stylus,
-        PointerDeviceKind.trackpad,
-      };
+    PointerDeviceKind.touch,
+    PointerDeviceKind.mouse,
+    PointerDeviceKind.stylus,
+    PointerDeviceKind.trackpad,
+  };
 
   @override
   ScrollPhysics getScrollPhysics(BuildContext context) {
@@ -39,9 +35,7 @@ class _AppScrollBehavior extends MaterialScrollBehavior {
         parent: AlwaysScrollableScrollPhysics(),
       );
     }
-    return const ClampingScrollPhysics(
-      parent: AlwaysScrollableScrollPhysics(),
-    );
+    return const ClampingScrollPhysics(parent: AlwaysScrollableScrollPhysics());
   }
 }
 

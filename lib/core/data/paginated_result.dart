@@ -24,10 +24,7 @@ class PaginationMetadata {
 }
 
 class PaginatedResult<T> {
-  PaginatedResult({
-    required this.items,
-    required this.metadata,
-  });
+  PaginatedResult({required this.items, required this.metadata});
 
   final List<T> items;
   final PaginationMetadata metadata;
@@ -38,9 +35,7 @@ class PaginatedResult<T> {
   ) {
     final raw = json['items'] as List<dynamic>? ?? [];
     return PaginatedResult(
-      items: raw
-          .map((e) => itemFromJson(e as Map<String, dynamic>))
-          .toList(),
+      items: raw.map((e) => itemFromJson(e as Map<String, dynamic>)).toList(),
       metadata: PaginationMetadata.fromJson(
         json['metadata'] as Map<String, dynamic>,
       ),

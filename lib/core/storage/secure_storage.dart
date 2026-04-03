@@ -10,9 +10,7 @@ final secureStorageProvider = Provider<SecureStorage>((ref) {
 
 class SecureStorage {
   final _storage = const FlutterSecureStorage(
-    mOptions: MacOsOptions(
-      usesDataProtectionKeychain: false,
-    ),
+    mOptions: MacOsOptions(usesDataProtectionKeychain: false),
   );
 
   static const _accessTokenKey = 'access_token';
@@ -20,7 +18,10 @@ class SecureStorage {
   static String? _memoryAccessToken;
   static String? _memoryRefreshToken;
 
-  Future<void> saveTokens({required String accessToken, required String refreshToken}) async {
+  Future<void> saveTokens({
+    required String accessToken,
+    required String refreshToken,
+  }) async {
     // Keep an in-memory copy so immediate follow-up requests after login
     // don't depend on keychain availability timing.
     _memoryAccessToken = accessToken;
@@ -29,7 +30,9 @@ class SecureStorage {
       await _storage.write(key: _accessTokenKey, value: accessToken);
       await _storage.write(key: _refreshTokenKey, value: refreshToken);
     } on PlatformException catch (e) {
-      if (e.code == '-34018' || e.code == 'errSecMissingEntitlement' || kDebugMode) {
+      if (e.code == '-34018' ||
+          e.code == 'errSecMissingEntitlement' ||
+          kDebugMode) {
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString(_accessTokenKey, accessToken);
         await prefs.setString(_refreshTokenKey, refreshToken);
@@ -46,7 +49,9 @@ class SecureStorage {
       if (value != null) _memoryAccessToken = value;
       return value;
     } on PlatformException catch (e) {
-      if (e.code == '-34018' || e.code == 'errSecMissingEntitlement' || kDebugMode) {
+      if (e.code == '-34018' ||
+          e.code == 'errSecMissingEntitlement' ||
+          kDebugMode) {
         final prefs = await SharedPreferences.getInstance();
         final value = prefs.getString(_accessTokenKey);
         if (value != null) _memoryAccessToken = value;
@@ -64,7 +69,9 @@ class SecureStorage {
       if (value != null) _memoryRefreshToken = value;
       return value;
     } on PlatformException catch (e) {
-      if (e.code == '-34018' || e.code == 'errSecMissingEntitlement' || kDebugMode) {
+      if (e.code == '-34018' ||
+          e.code == 'errSecMissingEntitlement' ||
+          kDebugMode) {
         final prefs = await SharedPreferences.getInstance();
         final value = prefs.getString(_refreshTokenKey);
         if (value != null) _memoryRefreshToken = value;

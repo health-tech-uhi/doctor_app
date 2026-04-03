@@ -15,12 +15,7 @@ class DashboardShell extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       extendBody: true,
-      body: Stack(
-        children: [
-          navigationShell,
-          _buildFloatingNavBar(context),
-        ],
-      ),
+      body: Stack(children: [navigationShell, _buildFloatingNavBar(context)]),
     );
   }
 
@@ -73,7 +68,9 @@ class DashboardShell extends ConsumerWidget {
     String label,
   ) {
     final isSelected = navigationShell.currentIndex == index;
-    final color = isSelected ? AppGradients.cyanMint : Colors.white.withOpacity(0.5);
+    final color = isSelected
+        ? AppGradients.cyanMint
+        : Colors.white.withOpacity(0.5);
 
     return Expanded(
       child: GestureDetector(
@@ -88,21 +85,14 @@ class DashboardShell extends ConsumerWidget {
             AnimatedScale(
               scale: isSelected ? 1.2 : 1.0,
               duration: const Duration(milliseconds: 200),
-              child: Icon(
-                icon,
-                color: color,
-                size: 24,
-              ),
+              child: Icon(icon, color: color, size: 24),
             ),
             if (isSelected) ...[
               const SizedBox(height: 4),
               Container(
                 width: 4,
                 height: 4,
-                decoration: BoxDecoration(
-                  color: color,
-                  shape: BoxShape.circle,
-                ),
+                decoration: BoxDecoration(color: color, shape: BoxShape.circle),
               ),
             ],
           ],

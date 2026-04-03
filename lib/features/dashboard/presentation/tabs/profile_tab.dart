@@ -18,7 +18,11 @@ class ProfileTab extends ConsumerWidget {
     if (authState.requiresProfileCompletion) {
       return AuroraBackground(
         child: Center(
-          child: _buildErrorState(context, ref, const DoctorProfileNotFoundException()),
+          child: _buildErrorState(
+            context,
+            ref,
+            const DoctorProfileNotFoundException(),
+          ),
         ),
       );
     }
@@ -62,8 +66,8 @@ class ProfileTab extends ConsumerWidget {
         Text(
           'Dr. ${profile.fullName}',
           style: const TextStyle(
-            color: DoctorTheme.textPrimary, 
-            fontSize: 28, 
+            color: DoctorTheme.textPrimary,
+            fontSize: 28,
             fontWeight: FontWeight.w800,
             letterSpacing: -0.6,
           ),
@@ -72,8 +76,8 @@ class ProfileTab extends ConsumerWidget {
         Text(
           profile.specialization.toUpperCase(),
           style: const TextStyle(
-            color: DoctorTheme.accentCyan, 
-            fontSize: 12, 
+            color: DoctorTheme.accentCyan,
+            fontSize: 12,
             fontWeight: FontWeight.w800,
             letterSpacing: 1.2,
           ),
@@ -91,11 +95,14 @@ class ProfileTab extends ConsumerWidget {
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         gradient: DoctorTheme.profileGradient,
-        border: Border.all(color: DoctorTheme.accentCyan.withOpacity(0.3), width: 3),
+        border: Border.all(
+          color: DoctorTheme.accentCyan.withOpacity(0.3),
+          width: 3,
+        ),
         boxShadow: [
           BoxShadow(
-            color: DoctorTheme.accentCyan.withOpacity(0.15), 
-            blurRadius: 30, 
+            color: DoctorTheme.accentCyan.withOpacity(0.15),
+            blurRadius: 30,
             spreadRadius: 5,
           ),
         ],
@@ -104,8 +111,8 @@ class ProfileTab extends ConsumerWidget {
       child: Text(
         _initials(name),
         style: const TextStyle(
-          color: Colors.white, 
-          fontSize: 36, 
+          color: Colors.white,
+          fontSize: 36,
           fontWeight: FontWeight.w800,
           letterSpacing: 1.0,
         ),
@@ -117,23 +124,39 @@ class ProfileTab extends ConsumerWidget {
     final status = (verificationStatus ?? 'pending').toLowerCase();
     final isVerified = status == 'verified';
     final label = isVerified ? 'Verified Professional' : 'Verification Pending';
-    final color = isVerified ? DoctorTheme.accentCyan : DoctorTheme.accentAmber;
+
+    // Color logic as per user request for pending state
+    final color = isVerified ? DoctorTheme.accentCyan : const Color(0xFFFFB74D);
+    final bgColor = isVerified
+        ? color.withValues(alpha: 0.1)
+        : const Color.fromRGBO(255, 152, 0, 0.15);
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: bgColor,
         borderRadius: BorderRadius.circular(30),
-        border: Border.all(color: color.withOpacity(0.2)),
+        border: Border.all(color: color.withValues(alpha: 0.2)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(isVerified ? Icons.verified_user_rounded : Icons.pending_actions_rounded, color: color, size: 14),
+          Icon(
+            isVerified
+                ? Icons.verified_user_rounded
+                : Icons.pending_actions_rounded,
+            color: color,
+            size: 14,
+          ),
           const SizedBox(width: 8),
           Text(
-            label, 
-            style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w800, letterSpacing: 0.2)
+            label,
+            style: TextStyle(
+              color: color,
+              fontSize: 12,
+              fontWeight: FontWeight.w800,
+              letterSpacing: 0.2,
+            ),
           ),
         ],
       ),
@@ -149,17 +172,29 @@ class ProfileTab extends ConsumerWidget {
           child: Text(
             'PROFESSIONAL OVERVIEW',
             style: TextStyle(
-              color: DoctorTheme.textTertiary, 
-              fontSize: 11, 
-              fontWeight: FontWeight.w800, 
+              color: DoctorTheme.textTertiary,
+              fontSize: 11,
+              fontWeight: FontWeight.w800,
               letterSpacing: 1.5,
             ),
           ),
         ),
         const SizedBox(height: 16),
-        _infoRow(Icons.history_edu_rounded, 'Experience', '${profile.experienceYears ?? 'N/A'} Years'),
-        _infoRow(Icons.currency_rupee_rounded, 'Consultation', '₹${profile.consultationFeeInr?.toStringAsFixed(0) ?? 'N/A'}'),
-        _infoRow(Icons.document_scanner_rounded, 'License No.', _displayOrMissing(profile.licenseNumber)),
+        _infoRow(
+          Icons.history_edu_rounded,
+          'Experience',
+          '${profile.experienceYears ?? 'N/A'} Years',
+        ),
+        _infoRow(
+          Icons.currency_rupee_rounded,
+          'Consultation',
+          '₹${profile.consultationFeeInr?.toStringAsFixed(0) ?? 'N/A'}',
+        ),
+        _infoRow(
+          Icons.document_scanner_rounded,
+          'License No.',
+          _displayOrMissing(profile.licenseNumber),
+        ),
       ],
     );
   }
@@ -180,15 +215,22 @@ class ProfileTab extends ConsumerWidget {
               child: Icon(icon, color: DoctorTheme.accentCyan, size: 18),
             ),
             const SizedBox(width: 16),
-            Text(label, style: const TextStyle(color: DoctorTheme.textSecondary, fontSize: 14, fontWeight: FontWeight.w500)),
+            Text(
+              label,
+              style: const TextStyle(
+                color: DoctorTheme.textSecondary,
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
             const Spacer(),
             Text(
-              value, 
+              value,
               style: const TextStyle(
-                color: DoctorTheme.textPrimary, 
-                fontWeight: FontWeight.w700, 
+                color: DoctorTheme.textPrimary,
+                fontWeight: FontWeight.w700,
                 fontSize: 14,
-              )
+              ),
             ),
           ],
         ),
@@ -205,24 +247,44 @@ class ProfileTab extends ConsumerWidget {
           child: Text(
             'ACCOUNT & PREFERENCES',
             style: TextStyle(
-              color: DoctorTheme.textTertiary, 
-              fontSize: 11, 
-              fontWeight: FontWeight.w800, 
+              color: DoctorTheme.textTertiary,
+              fontSize: 11,
+              fontWeight: FontWeight.w800,
               letterSpacing: 1.5,
             ),
           ),
         ),
         const SizedBox(height: 16),
-        _settingRow(context, Icons.person_outline_rounded, 'Edit Profile Details', () => context.push('/profile/edit')),
-        _settingRow(context, Icons.verified_user_outlined, 'KYC & Verification', () => context.push('/profile/kyc')),
-        _settingRow(context, Icons.notifications_none_rounded, 'Reminders & Notifications', () {}),
+        _settingRow(
+          context,
+          Icons.person_outline_rounded,
+          'Edit Profile Details',
+          () => context.push('/profile/edit'),
+        ),
+        _settingRow(
+          context,
+          Icons.verified_user_outlined,
+          'KYC & Verification',
+          () => context.push('/profile/kyc'),
+        ),
+        _settingRow(
+          context,
+          Icons.notifications_none_rounded,
+          'Reminders & Notifications',
+          () {},
+        ),
         const SizedBox(height: 24),
         _buildLogoutButton(ref),
       ],
     );
   }
 
-  Widget _settingRow(BuildContext context, IconData icon, String label, VoidCallback onTap) {
+  Widget _settingRow(
+    BuildContext context,
+    IconData icon,
+    String label,
+    VoidCallback onTap,
+  ) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: GlassCard(
@@ -234,15 +296,19 @@ class ProfileTab extends ConsumerWidget {
             const SizedBox(width: 16),
             Expanded(
               child: Text(
-                label, 
+                label,
                 style: const TextStyle(
-                  color: DoctorTheme.textPrimary, 
-                  fontSize: 15, 
+                  color: DoctorTheme.textPrimary,
+                  fontSize: 15,
                   fontWeight: FontWeight.w600,
-                )
-              )
+                ),
+              ),
             ),
-            const Icon(Icons.chevron_right_rounded, color: DoctorTheme.textTertiary, size: 20),
+            const Icon(
+              Icons.chevron_right_rounded,
+              color: DoctorTheme.textTertiary,
+              size: 20,
+            ),
           ],
         ),
       ),
@@ -257,11 +323,19 @@ class ProfileTab extends ConsumerWidget {
       child: const Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.power_settings_new_rounded, color: Color(0xFFFF4B4B), size: 20),
+          Icon(
+            Icons.power_settings_new_rounded,
+            color: Color(0xFFFF4B4B),
+            size: 20,
+          ),
           SizedBox(width: 12),
           Text(
-            'Logout', 
-            style: TextStyle(color: Color(0xFFFF4B4B), fontWeight: FontWeight.w800, fontSize: 16)
+            'Logout',
+            style: TextStyle(
+              color: Color(0xFFFF4B4B),
+              fontWeight: FontWeight.w800,
+              fontSize: 16,
+            ),
           ),
         ],
       ),
@@ -271,7 +345,7 @@ class ProfileTab extends ConsumerWidget {
   Widget _buildSkeleton() {
     return const Center(
       child: CircularProgressIndicator(
-        strokeWidth: 2, 
+        strokeWidth: 2,
         color: DoctorTheme.accentCyan,
       ),
     );
@@ -291,8 +365,8 @@ class ProfileTab extends ConsumerWidget {
               shape: BoxShape.circle,
             ),
             child: Icon(
-              isMissing ? Icons.person_search_rounded : Icons.cloud_off_rounded, 
-              size: 56, 
+              isMissing ? Icons.person_search_rounded : Icons.cloud_off_rounded,
+              size: 56,
               color: DoctorTheme.accentCyan,
             ),
           ),
@@ -300,35 +374,46 @@ class ProfileTab extends ConsumerWidget {
           Text(
             isMissing ? 'Profile Incomplete' : 'Network Error',
             style: const TextStyle(
-              color: DoctorTheme.textPrimary, 
-              fontSize: 24, 
+              color: DoctorTheme.textPrimary,
+              fontSize: 24,
               fontWeight: FontWeight.w800,
               letterSpacing: -0.5,
             ),
           ),
           const SizedBox(height: 12),
           Text(
-            isMissing 
-              ? 'Please finalize your professional details to access your dashboard.' 
-              : 'Unable to reach clinical servers. Please check your connection.',
+            isMissing
+                ? 'Please finalize your professional details to access your dashboard.'
+                : 'Unable to reach clinical servers. Please check your connection.',
             textAlign: TextAlign.center,
-            style: const TextStyle(color: DoctorTheme.textSecondary, fontSize: 14, height: 1.5),
+            style: const TextStyle(
+              color: DoctorTheme.textSecondary,
+              fontSize: 14,
+              height: 1.5,
+            ),
           ),
           const SizedBox(height: 40),
           SizedBox(
             width: double.infinity,
             height: 54,
             child: ElevatedButton(
-              onPressed: isMissing ? () => context.push('/complete-profile') : () => ref.refresh(doctorProfileProvider),
+              onPressed: isMissing
+                  ? () => context.push('/complete-profile')
+                  : () => ref.refresh(doctorProfileProvider),
               style: ElevatedButton.styleFrom(
                 backgroundColor: DoctorTheme.accentCyan,
                 foregroundColor: Colors.black,
                 elevation: 0,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
               ),
               child: Text(
                 isMissing ? 'Finalize Profile' : 'Retry Connection',
-                style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15),
+                style: const TextStyle(
+                  fontWeight: FontWeight.w800,
+                  fontSize: 15,
+                ),
               ),
             ),
           ),
@@ -339,7 +424,8 @@ class ProfileTab extends ConsumerWidget {
 
   String _initials(String fullName) {
     final parts = fullName.trim().split(' ');
-    if (parts.length >= 2) return '${parts.first[0]}${parts.last[0]}'.toUpperCase();
+    if (parts.length >= 2)
+      return '${parts.first[0]}${parts.last[0]}'.toUpperCase();
     return fullName.isNotEmpty ? fullName[0].toUpperCase() : '?';
   }
 

@@ -5,9 +5,10 @@ import '../../kyc/domain/kyc_document.dart';
 
 /// Async provider that fetches and caches the authenticated doctor's profile.
 /// Consuming widgets can use .when() to handle loading/error/data states.
-final doctorProfileProvider = AsyncNotifierProvider<DoctorProfileNotifier, DoctorProfile>(
-  DoctorProfileNotifier.new,
-);
+final doctorProfileProvider =
+    AsyncNotifierProvider<DoctorProfileNotifier, DoctorProfile>(
+      DoctorProfileNotifier.new,
+    );
 
 class DoctorProfileNotifier extends AsyncNotifier<DoctorProfile> {
   /// Filled by [AuthNotifier] **before** [ref.read(doctorProfileProvider.notifier)] so the

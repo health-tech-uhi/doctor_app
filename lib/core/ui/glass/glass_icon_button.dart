@@ -27,10 +27,7 @@ class GlassIconButton extends StatelessWidget {
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: color ?? Colors.white.withOpacity(0.1),
-            border: Border.all(
-              color: Colors.white.withOpacity(0.2),
-              width: 1,
-            ),
+            border: Border.all(color: Colors.white.withOpacity(0.2), width: 1),
           ),
           child: IconButton(
             icon: Icon(icon, size: size * 0.5),

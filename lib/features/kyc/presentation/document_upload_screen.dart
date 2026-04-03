@@ -13,9 +13,17 @@ import '../../doctor/providers/doctor_providers.dart';
 /// Mirrors the `document_type` field expected by the backend.
 enum KycDocumentType {
   medicalLicense('medical_license', 'Medical License', Icons.badge_outlined),
-  degreeCertificate('degree_certificate', 'Degree Certificate', Icons.school_outlined),
+  degreeCertificate(
+    'degree_certificate',
+    'Degree Certificate',
+    Icons.school_outlined,
+  ),
   idProof('id_proof', 'Government ID Proof', Icons.credit_card_outlined),
-  registrationCertificate('registration_certificate', 'NMC Registration Certificate', Icons.article_outlined);
+  registrationCertificate(
+    'registration_certificate',
+    'NMC Registration Certificate',
+    Icons.article_outlined,
+  );
 
   const KycDocumentType(this.value, this.label, this.icon);
 
@@ -82,8 +90,10 @@ class _DocumentUploadScreenState extends ConsumerState<DocumentUploadScreen> {
 
     if (result != null && result.files.isNotEmpty) {
       setState(() {
-        _state =
-            _state.copyWith(selectedFile: result.files.first, errorMessage: null);
+        _state = _state.copyWith(
+          selectedFile: result.files.first,
+          errorMessage: null,
+        );
       });
     }
   }
@@ -91,14 +101,17 @@ class _DocumentUploadScreenState extends ConsumerState<DocumentUploadScreen> {
   Future<void> _upload() async {
     if (_state.selectedType == null) {
       setState(() {
-        _state =
-            _state.copyWith(errorMessage: 'Please select a document type.');
+        _state = _state.copyWith(
+          errorMessage: 'Please select a document type.',
+        );
       });
       return;
     }
     if (_state.selectedFile == null || _state.selectedFile!.bytes == null) {
       setState(() {
-        _state = _state.copyWith(errorMessage: 'Please select a file to upload.');
+        _state = _state.copyWith(
+          errorMessage: 'Please select a file to upload.',
+        );
       });
       return;
     }
@@ -111,7 +124,9 @@ class _DocumentUploadScreenState extends ConsumerState<DocumentUploadScreen> {
       final file = _state.selectedFile!;
       final mimeType = _mimeTypeForExtension(file.extension);
 
-      await ref.read(kycUploadRepositoryProvider).uploadDocument(
+      await ref
+          .read(kycUploadRepositoryProvider)
+          .uploadDocument(
             fileBytes: file.bytes!,
             fileName: file.name,
             mimeType: mimeType,
@@ -132,8 +147,10 @@ class _DocumentUploadScreenState extends ConsumerState<DocumentUploadScreen> {
         setState(() {
           _state = _state.copyWith(
             isUploading: false,
-            errorMessage:
-                userFacingErrorMessage(e, context: ErrorUxContext.kyc),
+            errorMessage: userFacingErrorMessage(
+              e,
+              context: ErrorUxContext.kyc,
+            ),
           );
         });
       }
@@ -163,15 +180,16 @@ class _DocumentUploadScreenState extends ConsumerState<DocumentUploadScreen> {
         title: 'Upload Document',
         leading: IconButton(
           tooltip: 'Back to verification',
-          icon: const Icon(Icons.arrow_back_ios_new,
-              color: Colors.white70, size: 18),
+          icon: const Icon(
+            Icons.arrow_back_ios_new,
+            color: Colors.white70,
+            size: 18,
+          ),
           onPressed: () => context.go('/kyc'),
         ),
       ),
       body: SafeArea(
-        child: _state.isSuccess
-            ? _buildSuccessState()
-            : _buildUploadForm(),
+        child: _state.isSuccess ? _buildSuccessState() : _buildUploadForm(),
       ),
     );
   }
@@ -187,10 +205,16 @@ class _DocumentUploadScreenState extends ConsumerState<DocumentUploadScreen> {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: Colors.tealAccent.withValues(alpha: 0.12),
-              border: Border.all(color: Colors.tealAccent.withValues(alpha: 0.4), width: 2),
+              border: Border.all(
+                color: Colors.tealAccent.withValues(alpha: 0.4),
+                width: 2,
+              ),
             ),
-            child: const Icon(Icons.check_rounded,
-                color: Colors.tealAccent, size: 48),
+            child: const Icon(
+              Icons.check_rounded,
+              color: Colors.tealAccent,
+              size: 48,
+            ),
           ),
           const SizedBox(height: 24),
           const Text(
@@ -245,17 +269,25 @@ class _DocumentUploadScreenState extends ConsumerState<DocumentUploadScreen> {
               decoration: BoxDecoration(
                 color: Colors.redAccent.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: Colors.redAccent.withValues(alpha: 0.3)),
+                border: Border.all(
+                  color: Colors.redAccent.withValues(alpha: 0.3),
+                ),
               ),
               child: Row(
                 children: [
-                  const Icon(Icons.error_outline,
-                      color: Colors.redAccent, size: 18),
+                  const Icon(
+                    Icons.error_outline,
+                    color: Colors.redAccent,
+                    size: 18,
+                  ),
                   const SizedBox(width: 10),
                   Expanded(
                     child: Text(
                       _state.errorMessage!,
-                      style: const TextStyle(color: Colors.redAccent, fontSize: 13),
+                      style: const TextStyle(
+                        color: Colors.redAccent,
+                        fontSize: 13,
+                      ),
                     ),
                   ),
                 ],
@@ -295,9 +327,11 @@ class _DocumentUploadScreenState extends ConsumerState<DocumentUploadScreen> {
             ),
             child: Row(
               children: [
-                Icon(type.icon,
-                    color: isSelected ? Colors.tealAccent : Colors.white54,
-                    size: 22),
+                Icon(
+                  type.icon,
+                  color: isSelected ? Colors.tealAccent : Colors.white54,
+                  size: 22,
+                ),
                 const SizedBox(width: 14),
                 Expanded(
                   child: Text(
@@ -312,8 +346,11 @@ class _DocumentUploadScreenState extends ConsumerState<DocumentUploadScreen> {
                   ),
                 ),
                 if (isSelected)
-                  const Icon(Icons.check_circle,
-                      color: Colors.tealAccent, size: 20),
+                  const Icon(
+                    Icons.check_circle,
+                    color: Colors.tealAccent,
+                    size: 20,
+                  ),
               ],
             ),
           ),
@@ -344,8 +381,11 @@ class _DocumentUploadScreenState extends ConsumerState<DocumentUploadScreen> {
         child: file != null
             ? Row(
                 children: [
-                  const Icon(Icons.insert_drive_file_outlined,
-                      color: Colors.tealAccent, size: 28),
+                  const Icon(
+                    Icons.insert_drive_file_outlined,
+                    color: Colors.tealAccent,
+                    size: 28,
+                  ),
                   const SizedBox(width: 14),
                   Expanded(
                     child: Column(
@@ -362,20 +402,23 @@ class _DocumentUploadScreenState extends ConsumerState<DocumentUploadScreen> {
                         Text(
                           '${(file.size / 1024).toStringAsFixed(1)} KB',
                           style: const TextStyle(
-                              color: Colors.white54, fontSize: 12),
+                            color: Colors.white54,
+                            fontSize: 12,
+                          ),
                         ),
                       ],
                     ),
                   ),
-                  const Icon(Icons.swap_horiz,
-                      color: Colors.white38, size: 20),
+                  const Icon(Icons.swap_horiz, color: Colors.white38, size: 20),
                 ],
               )
             : Column(
                 children: [
-                  Icon(Icons.cloud_upload_outlined,
-                      color: Colors.white38,
-                      size: 40),
+                  Icon(
+                    Icons.cloud_upload_outlined,
+                    color: Colors.white38,
+                    size: 40,
+                  ),
                   const SizedBox(height: 10),
                   const Text(
                     'Tap to select a file',
@@ -406,7 +449,11 @@ class _DocumentUploadScreenState extends ConsumerState<DocumentUploadScreen> {
           Expanded(
             child: Text(
               'Accepted: PDF, JPG, PNG · Max size: 50MB · Ensure the document is clearly legible.',
-              style: TextStyle(color: Colors.white38, fontSize: 12, height: 1.5),
+              style: TextStyle(
+                color: Colors.white38,
+                fontSize: 12,
+                height: 1.5,
+              ),
             ),
           ),
         ],

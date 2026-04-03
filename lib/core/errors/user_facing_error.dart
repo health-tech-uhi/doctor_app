@@ -1,13 +1,7 @@
 import 'package:dio/dio.dart';
 
 /// Where the error happened — used to pick appropriate copy (e.g. 401 on login vs elsewhere).
-enum ErrorUxContext {
-  login,
-  signup,
-  profile,
-  kyc,
-  generic,
-}
+enum ErrorUxContext { login, signup, profile, kyc, generic }
 
 /// Maps network/API failures to short, safe messages. Never exposes stack traces or raw Dio dumps.
 String userFacingErrorMessage(

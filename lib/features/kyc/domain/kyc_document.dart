@@ -8,6 +8,7 @@ class KycDocument {
   final String fileName;
   final String? mimeType;
   final String garageObjectUuid;
+
   /// Raw status: 'pending' | 'approved' | 'rejected'
   final String status;
   final String? rejectionReason;
@@ -57,9 +58,11 @@ class KycStatus {
   });
 
   factory KycStatus.fromJson(Map<String, dynamic> json) {
-    final docs = (json['documents'] as List<dynamic>?)
-        ?.map((d) => KycDocument.fromJson(d as Map<String, dynamic>))
-        .toList() ?? [];
+    final docs =
+        (json['documents'] as List<dynamic>?)
+            ?.map((d) => KycDocument.fromJson(d as Map<String, dynamic>))
+            .toList() ??
+        [];
     return KycStatus(
       verificationStatus: json['verification_status'] as String? ?? 'pending',
       documents: docs,

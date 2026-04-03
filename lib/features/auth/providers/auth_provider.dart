@@ -8,7 +8,9 @@ import '../../doctor/data/doctor_repository.dart';
 import '../../doctor/providers/doctor_providers.dart';
 
 /// Provider exposing the central AuthNotifier logic to be mapped with State.
-final authNotifierProvider = NotifierProvider<AuthNotifier, AuthState>(AuthNotifier.new);
+final authNotifierProvider = NotifierProvider<AuthNotifier, AuthState>(
+  AuthNotifier.new,
+);
 
 /// Tracks and orchestrates changes to the AuthState.
 /// After authentication, it automatically fetches the doctor's verification status
@@ -67,8 +69,9 @@ class AuthNotifier extends Notifier<AuthState> {
     state = state.copyWith(
       status: AuthStatus.authenticated,
       clearErrorMessage: true,
-      verificationStatus:
-          _kycEnabled ? VerificationStatus.pending : VerificationStatus.unknown,
+      verificationStatus: _kycEnabled
+          ? VerificationStatus.pending
+          : VerificationStatus.unknown,
     );
   }
 
@@ -100,8 +103,9 @@ class AuthNotifier extends Notifier<AuthState> {
         status: AuthStatus.authenticated,
         clearErrorMessage: true,
         requiresProfileCompletion: true,
-        verificationStatus:
-            _kycEnabled ? VerificationStatus.pending : VerificationStatus.unknown,
+        verificationStatus: _kycEnabled
+            ? VerificationStatus.pending
+            : VerificationStatus.unknown,
       );
     } catch (_) {
       // Keep user authenticated, but do not force profile onboarding on transient API errors.
@@ -110,8 +114,9 @@ class AuthNotifier extends Notifier<AuthState> {
         status: AuthStatus.authenticated,
         clearErrorMessage: true,
         requiresProfileCompletion: false,
-        verificationStatus:
-            _kycEnabled ? VerificationStatus.pending : VerificationStatus.unknown,
+        verificationStatus: _kycEnabled
+            ? VerificationStatus.pending
+            : VerificationStatus.unknown,
       );
     }
   }

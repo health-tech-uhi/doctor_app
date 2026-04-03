@@ -7,10 +7,7 @@ import '../../../../core/ui/glass/glass_card.dart';
 class TeamsCalendarPicker extends StatefulWidget {
   final DateTime initialDate;
 
-  const TeamsCalendarPicker({
-    super.key,
-    required this.initialDate,
-  });
+  const TeamsCalendarPicker({super.key, required this.initialDate});
 
   @override
   State<TeamsCalendarPicker> createState() => _TeamsCalendarPickerState();
@@ -19,7 +16,8 @@ class TeamsCalendarPicker extends StatefulWidget {
 class _TeamsCalendarPickerState extends State<TeamsCalendarPicker> {
   late DateTime _selectedDate;
   late DateTime _displayDate;
-  final DateRangePickerController _pickerController = DateRangePickerController();
+  final DateRangePickerController _pickerController =
+      DateRangePickerController();
 
   @override
   void initState() {
@@ -93,13 +91,17 @@ class _TeamsCalendarPickerState extends State<TeamsCalendarPicker> {
                             headerHeight: 0, // We use custom header logic
                             monthCellStyle: DateRangePickerMonthCellStyle(
                               textStyle: const TextStyle(
-                                  color: DoctorTheme.textPrimary, fontSize: 13),
+                                color: DoctorTheme.textPrimary,
+                                fontSize: 13,
+                              ),
                               todayTextStyle: const TextStyle(
                                 color: DoctorTheme.accentCyan,
                                 fontWeight: FontWeight.bold,
                               ),
                               disabledDatesTextStyle: TextStyle(
-                                color: DoctorTheme.textTertiary.withValues(alpha: 0.3),
+                                color: DoctorTheme.textTertiary.withValues(
+                                  alpha: 0.3,
+                                ),
                               ),
                             ),
                             selectionColor: DoctorTheme.accentCyan,
@@ -110,10 +112,16 @@ class _TeamsCalendarPickerState extends State<TeamsCalendarPicker> {
                               }
                             },
                             onViewChanged: (args) {
-                              final visibleDate = args.visibleDateRange.startDate;
+                              final visibleDate =
+                                  args.visibleDateRange.startDate;
                               if (visibleDate != null) {
-                                WidgetsBinding.instance.addPostFrameCallback((_) {
-                                  if (mounted && _displayDate.month != visibleDate.month || _displayDate.year != visibleDate.year) {
+                                WidgetsBinding.instance.addPostFrameCallback((
+                                  _,
+                                ) {
+                                  if (mounted &&
+                                          _displayDate.month !=
+                                              visibleDate.month ||
+                                      _displayDate.year != visibleDate.year) {
                                     setState(() {
                                       _displayDate = visibleDate;
                                     });
@@ -175,12 +183,13 @@ class _TeamsCalendarPickerState extends State<TeamsCalendarPicker> {
                       // Month Grid (3x4)
                       Expanded(
                         child: GridView.builder(
-                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3,
-                            mainAxisSpacing: 12,
-                            crossAxisSpacing: 12,
-                            childAspectRatio: 1.4,
-                          ),
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 3,
+                                mainAxisSpacing: 12,
+                                crossAxisSpacing: 12,
+                                childAspectRatio: 1.4,
+                              ),
                           itemCount: 12,
                           itemBuilder: (context, index) {
                             final month = index + 1;
@@ -208,7 +217,9 @@ class _TeamsCalendarPickerState extends State<TeamsCalendarPicker> {
                           },
                           style: TextButton.styleFrom(
                             foregroundColor: DoctorTheme.accentCyan,
-                            textStyle: const TextStyle(fontWeight: FontWeight.w700),
+                            textStyle: const TextStyle(
+                              fontWeight: FontWeight.w700,
+                            ),
                           ),
                           child: const Text('Today'),
                         ),
@@ -240,8 +251,18 @@ class _TeamsCalendarPickerState extends State<TeamsCalendarPicker> {
 
   String _getMonthAbbr(int month) {
     return [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
     ][month - 1];
   }
 }
@@ -270,7 +291,9 @@ class _MonthTile extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
           border: isSelected
               ? Border.all(
-                  color: DoctorTheme.accentCyan.withValues(alpha: 0.4), width: 1.5)
+                  color: DoctorTheme.accentCyan.withValues(alpha: 0.4),
+                  width: 1.5,
+                )
               : null,
         ),
         alignment: Alignment.center,

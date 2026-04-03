@@ -29,10 +29,10 @@ class AuthRepository {
     required String identifier,
     required String channel, // "Email" | "Sms"
   }) async {
-    await _dio.post('/api/auth/signup/otp/generate', data: {
-      'identifier': identifier,
-      'channel': channel,
-    });
+    await _dio.post(
+      '/api/auth/signup/otp/generate',
+      data: {'identifier': identifier, 'channel': channel},
+    );
   }
 
   /// Verifies signup OTP before account creation proceeds.
@@ -41,10 +41,10 @@ class AuthRepository {
     required String identifier,
     required String otp,
   }) async {
-    await _dio.post('/api/auth/signup/otp/verify', data: {
-      'identifier': identifier,
-      'otp': otp,
-    });
+    await _dio.post(
+      '/api/auth/signup/otp/verify',
+      data: {'identifier': identifier, 'otp': otp},
+    );
   }
 
   /// Hits the remote API passing credentials.
@@ -52,11 +52,15 @@ class AuthRepository {
   Future<void> login(String identifier, String password) async {
     try {
       // Endpoint mapping directly to backend-for-frontend POST /api/auth/login
-      final response = await _dio.post('/api/auth/login', data: {
-        'identifier': identifier,
-        'credential': password,
-        'login_type': 'Password', // We explicitly use password-based login here
-      });
+      final response = await _dio.post(
+        '/api/auth/login',
+        data: {
+          'identifier': identifier,
+          'credential': password,
+          'login_type':
+              'Password', // We explicitly use password-based login here
+        },
+      );
 
       // Parse JSON token pairs out from standard response footprint
       final accessToken = response.data['token'];
@@ -87,14 +91,17 @@ class AuthRepository {
     String? firstName,
     String? lastName,
   }) async {
-    await _dio.post('/api/auth/register', data: {
-      'username': username,
-      'email': email,
-      'phone': phone,
-      'password': password,
-      'first_name': ?firstName,
-      'last_name': ?lastName,
-    });
+    await _dio.post(
+      '/api/auth/register',
+      data: {
+        'username': username,
+        'email': email,
+        'phone': phone,
+        'password': password,
+        'first_name': ?firstName,
+        'last_name': ?lastName,
+      },
+    );
   }
 
   /// Binds JWT to the doctor access-control profile (`profile_id` + `role: DOCTOR`).
@@ -105,7 +112,7 @@ class AuthRepository {
   /// Pings backend out of courtesy and drops tokens immediately protecting the local device state.
   Future<void> logout() async {
     try {
-       // Fire-and-forget clear via /api/auth/logout mapping
+      // Fire-and-forget clear via /api/auth/logout mapping
       await _dio.post('/api/auth/logout');
     } catch (e) {
       // Ignored for UX handling. We clear Local tokens no matter the ping response!
@@ -113,8 +120,8 @@ class AuthRepository {
       await _storage.clearTokens();
     }
   }
-  
-  /// Verifies presence of token locally. 
+
+  /// Verifies presence of token locally.
   /// NOTE: Only checks existence, token validity requires a full request dispatch.
   Future<bool> isAuthenticated() async {
     final token = await _storage.getAccessToken();

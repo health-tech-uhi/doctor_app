@@ -79,19 +79,37 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             shape: BoxShape.circle,
             gradient: AppGradients.auroraPrimary,
             boxShadow: [
-              BoxShadow(color: AppGradients.cyanMint.withOpacity(0.3), blurRadius: 40, spreadRadius: 5),
+              BoxShadow(
+                color: AppGradients.cyanMint.withOpacity(0.3),
+                blurRadius: 40,
+                spreadRadius: 5,
+              ),
             ],
           ),
-          child: const Icon(Icons.health_and_safety_rounded, size: 48, color: Colors.black),
+          child: const Icon(
+            Icons.health_and_safety_rounded,
+            size: 48,
+            color: Colors.black,
+          ),
         ),
         const SizedBox(height: 24),
         const Text(
           'AESTHETIQ',
-          style: TextStyle(color: Colors.white, fontSize: 32, fontWeight: FontWeight.w900, letterSpacing: 4),
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 32,
+            fontWeight: FontWeight.w900,
+            letterSpacing: 4,
+          ),
         ),
         const Text(
           'CLINICAL PORTAL',
-          style: TextStyle(color: AppGradients.cyanMint, fontSize: 12, fontWeight: FontWeight.w800, letterSpacing: 2),
+          style: TextStyle(
+            color: AppGradients.cyanMint,
+            fontSize: 12,
+            fontWeight: FontWeight.w800,
+            letterSpacing: 2,
+          ),
         ),
       ],
     );
@@ -105,7 +123,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         children: [
           const Text(
             'Secure Sign In',
-            style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           const SizedBox(height: 24),
           _buildTextField(
@@ -120,7 +142,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             icon: Icons.lock_outline_rounded,
             obscureText: _obscureText,
             suffix: IconButton(
-              icon: Icon(_obscureText ? Icons.visibility_off_rounded : Icons.visibility_rounded, color: Colors.white30),
+              icon: Icon(
+                _obscureText
+                    ? Icons.visibility_off_rounded
+                    : Icons.visibility_rounded,
+                color: Colors.white30,
+              ),
               onPressed: () => setState(() => _obscureText = !_obscureText),
             ),
           ),
@@ -151,10 +178,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         decoration: InputDecoration(
           labelText: label,
           labelStyle: const TextStyle(color: Colors.white38),
-          prefixIcon: Icon(icon, color: AppGradients.cyanMint.withOpacity(0.5), size: 20),
+          prefixIcon: Icon(
+            icon,
+            color: AppGradients.cyanMint.withOpacity(0.5),
+            size: 20,
+          ),
           suffixIcon: suffix,
           border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 20,
+            vertical: 16,
+          ),
         ),
       ),
     );
@@ -167,7 +201,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         borderRadius: BorderRadius.circular(16),
         gradient: AppGradients.cyanMintGradient,
         boxShadow: [
-          BoxShadow(color: AppGradients.cyanMint.withOpacity(0.2), blurRadius: 20, offset: const Offset(0, 10)),
+          BoxShadow(
+            color: AppGradients.cyanMint.withOpacity(0.2),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
         ],
       ),
       child: ElevatedButton(
@@ -175,13 +213,26 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.transparent,
           shadowColor: Colors.transparent,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
         ),
         child: isLoading
-            ? const SizedBox(height: 24, width: 24, child: CircularProgressIndicator(color: Colors.black, strokeWidth: 2))
+            ? const SizedBox(
+                height: 24,
+                width: 24,
+                child: CircularProgressIndicator(
+                  color: Colors.black,
+                  strokeWidth: 2,
+                ),
+              )
             : const Text(
                 'AUTHENTICATE',
-                style: TextStyle(color: Colors.black, fontWeight: FontWeight.w900, letterSpacing: 1.5),
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: 1.5,
+                ),
               ),
       ),
     );
@@ -191,12 +242,19 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Text('New to the portal? ', style: TextStyle(color: Colors.white38)),
+        const Text(
+          'New to the portal? ',
+          style: TextStyle(color: Colors.white38),
+        ),
         TextButton(
           onPressed: () => context.push('/signup'),
           child: const Text(
             'JOIN NOW',
-            style: TextStyle(color: AppGradients.cyanMint, fontWeight: FontWeight.w900, letterSpacing: 1),
+            style: TextStyle(
+              color: AppGradients.cyanMint,
+              fontWeight: FontWeight.w900,
+              letterSpacing: 1,
+            ),
           ),
         ),
       ],

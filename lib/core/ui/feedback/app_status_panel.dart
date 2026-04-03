@@ -40,19 +40,18 @@ class AppStatusPanel extends StatelessWidget {
             title,
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color: scheme.onSurface,
-                  fontWeight: FontWeight.w600,
-                ),
+              color: scheme.onSurface,
+              fontWeight: FontWeight.w600,
+            ),
           ),
           if (message != null) ...[
             SizedBox(height: compact ? 6 : 10),
             Text(
               message!,
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: secondary,
-                    height: 1.45,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(color: secondary, height: 1.45),
             ),
           ],
           if (primaryAction != null) ...[
@@ -79,9 +78,7 @@ class AppStatusPanel extends StatelessWidget {
           decoration: BoxDecoration(
             color: scheme.surfaceContainerHighest.withValues(alpha: 0.55),
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-              color: scheme.outline.withValues(alpha: 0.35),
-            ),
+            border: Border.all(color: scheme.outline.withValues(alpha: 0.35)),
           ),
           child: content,
         ),

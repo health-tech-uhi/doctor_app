@@ -51,7 +51,6 @@ class CareRelationship {
     );
   }
 
-  String get displayPatientName => patientName?.trim().isNotEmpty == true
-      ? patientName!.trim()
-      : 'Patient';
+  String get displayPatientName =>
+      patientName?.trim().isNotEmpty == true ? patientName!.trim() : 'Patient';
 }

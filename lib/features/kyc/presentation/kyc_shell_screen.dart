@@ -44,8 +44,8 @@ class _KycShellScreenState extends ConsumerState<KycShellScreen> {
             child: CircularProgressIndicator(color: Colors.tealAccent),
           ),
           error: (e, _) => _buildError(
-                userFacingErrorMessage(e, context: ErrorUxContext.kyc),
-              ),
+            userFacingErrorMessage(e, context: ErrorUxContext.kyc),
+          ),
           data: (kycStatus) => _buildContent(kycStatus),
         ),
       ),
@@ -98,9 +98,7 @@ class _KycShellScreenState extends ConsumerState<KycShellScreen> {
           ],
         ),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: Colors.tealAccent.withValues(alpha: 0.2),
-        ),
+        border: Border.all(color: Colors.tealAccent.withValues(alpha: 0.2)),
       ),
       child: Column(
         children: [
@@ -214,8 +212,8 @@ class _KycShellScreenState extends ConsumerState<KycShellScreen> {
     final color = isCompleted
         ? Colors.tealAccent
         : isActive
-            ? Colors.white
-            : Colors.white30;
+        ? Colors.white
+        : Colors.white30;
 
     return GestureDetector(
       onTap: onTap,
@@ -247,7 +245,11 @@ class _KycShellScreenState extends ConsumerState<KycShellScreen> {
               ),
               child: Center(
                 child: isCompleted
-                    ? const Icon(Icons.check, color: Colors.tealAccent, size: 18)
+                    ? const Icon(
+                        Icons.check,
+                        color: Colors.tealAccent,
+                        size: 18,
+                      )
                     : Text(
                         '$index',
                         style: TextStyle(
@@ -266,7 +268,9 @@ class _KycShellScreenState extends ConsumerState<KycShellScreen> {
                   Text(
                     title,
                     style: TextStyle(
-                      color: color == Colors.white30 ? Colors.white38 : Colors.white,
+                      color: color == Colors.white30
+                          ? Colors.white38
+                          : Colors.white,
                       fontWeight: FontWeight.w600,
                       fontSize: 15,
                     ),
@@ -275,7 +279,9 @@ class _KycShellScreenState extends ConsumerState<KycShellScreen> {
                   Text(
                     subtitle,
                     style: TextStyle(
-                      color: color == Colors.white30 ? Colors.white24 : Colors.white60,
+                      color: color == Colors.white30
+                          ? Colors.white24
+                          : Colors.white60,
                       fontSize: 13,
                     ),
                   ),
@@ -284,8 +290,11 @@ class _KycShellScreenState extends ConsumerState<KycShellScreen> {
             ),
             if (isActive) ...[
               const SizedBox(width: 8),
-              const Icon(Icons.arrow_forward_ios,
-                  color: Colors.tealAccent, size: 14),
+              const Icon(
+                Icons.arrow_forward_ios,
+                color: Colors.tealAccent,
+                size: 14,
+              ),
             ],
           ],
         ),
@@ -330,8 +339,8 @@ class _KycShellScreenState extends ConsumerState<KycShellScreen> {
     final statusColor = doc.status == 'approved'
         ? Colors.tealAccent
         : doc.status == 'rejected'
-            ? Colors.redAccent
-            : Colors.amber;
+        ? Colors.redAccent
+        : Colors.amber;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
@@ -343,8 +352,11 @@ class _KycShellScreenState extends ConsumerState<KycShellScreen> {
       ),
       child: Row(
         children: [
-          const Icon(Icons.description_outlined,
-              color: Colors.white54, size: 22),
+          const Icon(
+            Icons.description_outlined,
+            color: Colors.white54,
+            size: 22,
+          ),
           const SizedBox(width: 12),
           Expanded(
             child: Column(

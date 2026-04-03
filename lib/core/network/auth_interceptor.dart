@@ -6,13 +6,17 @@ import 'access_context_restore.dart';
 class AuthInterceptor extends Interceptor {
   final SecureStorage _secureStorage;
   final Dio _refreshDio;
+
   /// Main app client — used to replay the failed request after a successful refresh.
   final Dio _mainDio;
 
   AuthInterceptor(this._secureStorage, this._refreshDio, this._mainDio);
 
   @override
-  Future<void> onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
+  Future<void> onRequest(
+    RequestOptions options,
+    RequestInterceptorHandler handler,
+  ) async {
     final accessToken = await _secureStorage.getAccessToken();
     if (accessToken != null) {
       options.headers['Authorization'] = 'Bearer $accessToken';
@@ -21,7 +25,10 @@ class AuthInterceptor extends Interceptor {
   }
 
   @override
-  Future<void> onError(DioException err, ErrorInterceptorHandler handler) async {
+  Future<void> onError(
+    DioException err,
+    ErrorInterceptorHandler handler,
+  ) async {
     final path = err.requestOptions.uri.path;
     // Avoid refresh loops if the refresh call itself failed with 401.
     if (path.endsWith('/api/auth/refresh')) {
@@ -50,7 +57,8 @@ class AuthInterceptor extends Interceptor {
           if (response.statusCode == 200 && response.data != null) {
             final data = response.data as Map<String, dynamic>;
             final newAccessToken = data['token'] ?? data['accessToken'];
-            final newRefreshToken = data['refresh_token'] ?? data['refreshToken'];
+            final newRefreshToken =
+                data['refresh_token'] ?? data['refreshToken'];
 
             if (newAccessToken != null && newRefreshToken != null) {
               await _secureStorage.saveTokens(
@@ -70,10 +78,7 @@ class AuthInterceptor extends Interceptor {
 
               final tokenAfter = await _secureStorage.getAccessToken();
               final retryOptions = err.requestOptions.copyWith(
-                extra: {
-                  ...err.requestOptions.extra,
-                  '_auth_retry': true,
-                },
+                extra: {...err.requestOptions.extra, '_auth_retry': true},
               );
               retryOptions.headers['Authorization'] =
                   'Bearer ${tokenAfter ?? newAccessToken}';

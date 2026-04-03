@@ -72,7 +72,9 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _saving = true);
     try {
-      await ref.read(doctorRepositoryProvider).updateProfile(
+      await ref
+          .read(doctorRepositoryProvider)
+          .updateProfile(
             firstName: _firstNameCtrl.text.trim(),
             lastName: _lastNameCtrl.text.trim(),
             specialization: _specializationCtrl.text.trim(),
@@ -122,7 +124,10 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
             child: AppStatusPanel(
               icon: Icons.cloud_off_rounded,
               title: 'Couldn\'t load your profile',
-              message: userFacingErrorMessage(e, context: ErrorUxContext.profile),
+              message: userFacingErrorMessage(
+                e,
+                context: ErrorUxContext.profile,
+              ),
               iconColor: Theme.of(context).colorScheme.error,
               primaryAction: AdaptivePrimaryButton(
                 onPressed: () => ref.invalidate(doctorProfileProvider),
@@ -142,19 +147,36 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                   children: [
                     _field(_firstNameCtrl, 'First name', required: true),
                     _field(_lastNameCtrl, 'Last name', required: true),
-                    _field(_specializationCtrl, 'Specialization', required: true),
-                    _field(_feeCtrl, 'Consultation fee', required: true, number: true),
+                    _field(
+                      _specializationCtrl,
+                      'Specialization',
+                      required: true,
+                    ),
+                    _field(
+                      _feeCtrl,
+                      'Consultation fee',
+                      required: true,
+                      number: true,
+                    ),
                     _field(_experienceCtrl, 'Experience years', number: true),
                     _field(_licenseCtrl, 'License number', required: true),
                     _field(_degreeCtrl, 'Degree', required: true),
-                    _field(_institutionCtrl, 'Degree institution', required: true),
+                    _field(
+                      _institutionCtrl,
+                      'Degree institution',
+                      required: true,
+                    ),
                     _field(
                       _registrationYearCtrl,
                       'Registration year',
                       required: true,
                       number: true,
                     ),
-                    _field(_councilCtrl, 'State medical council', required: true),
+                    _field(
+                      _councilCtrl,
+                      'State medical council',
+                      required: true,
+                    ),
                     _multilineField(_bioCtrl, 'Bio', required: true),
                     const SizedBox(height: 18),
                     AdaptivePrimaryButton(
@@ -223,4 +245,3 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     );
   }
 }
-

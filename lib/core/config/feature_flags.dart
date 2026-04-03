@@ -16,8 +16,5 @@ bool _parseBoolFlag(String? value, {required bool fallback}) {
 /// Feature toggle for the end-to-end KYC flow.
 /// Default is disabled until the backend and UX flow are fully ready.
 final kycFeatureEnabledProvider = Provider<bool>((ref) {
-  return _parseBoolFlag(
-    dotenv.env['FEATURE_KYC_ENABLED'],
-    fallback: false,
-  );
+  return _parseBoolFlag(dotenv.env['FEATURE_KYC_ENABLED'], fallback: false);
 });

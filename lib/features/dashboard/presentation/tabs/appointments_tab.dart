@@ -53,14 +53,21 @@ class _AppointmentsTabState extends ConsumerState<AppointmentsTab> {
             _buildHeader(),
             Expanded(
               child: async.when(
-                loading: () => const Center(child: CircularProgressIndicator(strokeWidth: 2)),
-                error: (e, _) => const Center(child: Text('Connect to load schedule')),
+                loading: () => const Center(
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                ),
+                error: (e, _) =>
+                    const Center(child: Text('Connect to load schedule')),
                 data: (appointments) {
                   if (_segment == _ScheduleSegment.calendar) {
-                    final accepted = appointments.where((a) => a.normalizedStatus == 'accepted').toList();
+                    final accepted = appointments
+                        .where((a) => a.normalizedStatus == 'accepted')
+                        .toList();
                     return _buildCalendar(accepted);
                   } else {
-                    final pending = appointments.where((a) => a.normalizedStatus == 'requested').toList();
+                    final pending = appointments
+                        .where((a) => a.normalizedStatus == 'requested')
+                        .toList();
                     return _buildPendingList(pending);
                   }
                 },
@@ -86,7 +93,9 @@ class _AppointmentsTabState extends ConsumerState<AppointmentsTab> {
                   children: [
                     Text(
                       'Schedule',
-                      style: Theme.of(context).textTheme.displayMedium?.copyWith(fontSize: 28),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.displayMedium?.copyWith(fontSize: 28),
                     ),
                     const SizedBox(height: 4),
                     const Text(
@@ -134,8 +143,16 @@ class _AppointmentsTabState extends ConsumerState<AppointmentsTab> {
       ),
       child: Row(
         children: [
-          _segmentItem('Calendar', _ScheduleSegment.calendar, Icons.calendar_today_rounded),
-          _segmentItem('Pending', _ScheduleSegment.pending, Icons.hourglass_empty_rounded),
+          _segmentItem(
+            'Calendar',
+            _ScheduleSegment.calendar,
+            Icons.calendar_today_rounded,
+          ),
+          _segmentItem(
+            'Pending',
+            _ScheduleSegment.pending,
+            Icons.hourglass_empty_rounded,
+          ),
         ],
       ),
     );
@@ -149,10 +166,14 @@ class _AppointmentsTabState extends ConsumerState<AppointmentsTab> {
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           decoration: BoxDecoration(
-            color: isSelected ? DoctorTheme.accentCyan.withValues(alpha: 0.15) : Colors.transparent,
+            color: isSelected
+                ? DoctorTheme.accentCyan.withValues(alpha: 0.15)
+                : Colors.transparent,
             borderRadius: BorderRadius.circular(12),
             border: isSelected
-                ? Border.all(color: DoctorTheme.accentCyan.withValues(alpha: 0.3))
+                ? Border.all(
+                    color: DoctorTheme.accentCyan.withValues(alpha: 0.3),
+                  )
                 : null,
           ),
           alignment: Alignment.center,
@@ -162,13 +183,17 @@ class _AppointmentsTabState extends ConsumerState<AppointmentsTab> {
               Icon(
                 icon,
                 size: 16,
-                color: isSelected ? DoctorTheme.accentCyan : DoctorTheme.secondaryText,
+                color: isSelected
+                    ? DoctorTheme.accentCyan
+                    : DoctorTheme.secondaryText,
               ),
               const SizedBox(width: 8),
               Text(
                 label,
                 style: TextStyle(
-                  color: isSelected ? DoctorTheme.accentCyan : DoctorTheme.secondaryText,
+                  color: isSelected
+                      ? DoctorTheme.accentCyan
+                      : DoctorTheme.secondaryText,
                   fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600,
                   fontSize: 13,
                 ),
@@ -192,15 +217,16 @@ class _AppointmentsTabState extends ConsumerState<AppointmentsTab> {
         decoration: BoxDecoration(
           color: DoctorTheme.glassSurface,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: DoctorTheme.glassStroke,
-            width: 1.5,
-          ),
+          border: Border.all(color: DoctorTheme.glassStroke, width: 1.5),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.calendar_month_rounded, size: 18, color: DoctorTheme.accentCyan),
+            const Icon(
+              Icons.calendar_month_rounded,
+              size: 18,
+              color: DoctorTheme.accentCyan,
+            ),
             const SizedBox(width: 12),
             Text(
               label,
@@ -211,8 +237,11 @@ class _AppointmentsTabState extends ConsumerState<AppointmentsTab> {
               ),
             ),
             const SizedBox(width: 8),
-            Icon(Icons.keyboard_arrow_down_rounded,
-                size: 20, color: DoctorTheme.textPrimary.withValues(alpha: 0.5)),
+            Icon(
+              Icons.keyboard_arrow_down_rounded,
+              size: 20,
+              color: DoctorTheme.textPrimary.withValues(alpha: 0.5),
+            ),
           ],
         ),
       ),
@@ -263,17 +292,23 @@ class _AppointmentsTabState extends ConsumerState<AppointmentsTab> {
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           decoration: BoxDecoration(
-            color: isSelected ? DoctorTheme.accentCyan.withValues(alpha: 0.15) : Colors.transparent,
+            color: isSelected
+                ? DoctorTheme.accentCyan.withValues(alpha: 0.15)
+                : Colors.transparent,
             borderRadius: BorderRadius.circular(12),
             border: isSelected
-                ? Border.all(color: DoctorTheme.accentCyan.withValues(alpha: 0.3))
+                ? Border.all(
+                    color: DoctorTheme.accentCyan.withValues(alpha: 0.3),
+                  )
                 : null,
           ),
           alignment: Alignment.center,
           child: Text(
             label,
             style: TextStyle(
-              color: isSelected ? DoctorTheme.accentCyan : DoctorTheme.secondaryText,
+              color: isSelected
+                  ? DoctorTheme.accentCyan
+                  : DoctorTheme.secondaryText,
               fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600,
               fontSize: 12,
             ),
@@ -292,8 +327,12 @@ class _AppointmentsTabState extends ConsumerState<AppointmentsTab> {
           fontSize: 18,
           fontWeight: FontWeight.w700,
         ),
-        viewHeaderDateTextStyle: const TextStyle(color: DoctorTheme.textSecondary),
-        viewHeaderDayTextStyle: const TextStyle(color: DoctorTheme.textTertiary),
+        viewHeaderDateTextStyle: const TextStyle(
+          color: DoctorTheme.textSecondary,
+        ),
+        viewHeaderDayTextStyle: const TextStyle(
+          color: DoctorTheme.textTertiary,
+        ),
         timeTextStyle: const TextStyle(color: DoctorTheme.textTertiary),
         todayHighlightColor: DoctorTheme.accentCyan,
         selectionBorderColor: DoctorTheme.accentCyan,
@@ -317,7 +356,10 @@ class _AppointmentsTabState extends ConsumerState<AppointmentsTab> {
         cellBorderColor: DoctorTheme.glassStroke.withValues(alpha: 0.15),
         selectionDecoration: BoxDecoration(
           color: DoctorTheme.accentCyan.withValues(alpha: 0.05),
-          border: Border.all(color: DoctorTheme.accentCyan.withValues(alpha: 0.2), width: 1.5),
+          border: Border.all(
+            color: DoctorTheme.accentCyan.withValues(alpha: 0.2),
+            width: 1.5,
+          ),
           borderRadius: BorderRadius.circular(4),
         ),
         timeSlotViewSettings: const TimeSlotViewSettings(
@@ -326,7 +368,8 @@ class _AppointmentsTabState extends ConsumerState<AppointmentsTab> {
           timeInterval: Duration(minutes: 30),
           timeFormat: 'hh:mm a',
           timeIntervalHeight: 120, // Increased for spacing
-          timeRulerSize: 91, // Wider ruler to achieve ~16dp additional left label breathing room
+          timeRulerSize:
+              91, // Wider ruler to achieve ~16dp additional left label breathing room
           timelineAppointmentHeight: 60,
           timeTextStyle: TextStyle(
             color: DoctorTheme.textTertiary,
@@ -335,7 +378,8 @@ class _AppointmentsTabState extends ConsumerState<AppointmentsTab> {
           ),
         ),
         onTap: (details) {
-          if (details.appointments != null && details.appointments!.isNotEmpty) {
+          if (details.appointments != null &&
+              details.appointments!.isNotEmpty) {
             final appt = details.appointments!.first as Appointment;
             _showAppointmentDetails(appt);
           }
@@ -353,10 +397,10 @@ class _AppointmentsTabState extends ConsumerState<AppointmentsTab> {
     final color = status == 'accepted'
         ? DoctorTheme.accentCyan
         : status == 'requested'
-            ? DoctorTheme.accentAmber
-            : status == 'cancelled'
-                ? const Color(0xFFFF6B6B)
-                : DoctorTheme.textTertiary;
+        ? DoctorTheme.accentAmber
+        : status == 'cancelled'
+        ? const Color(0xFFFF6B6B)
+        : DoctorTheme.textTertiary;
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -373,7 +417,10 @@ class _AppointmentsTabState extends ConsumerState<AppointmentsTab> {
                 decoration: BoxDecoration(
                   color: color.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: color.withValues(alpha: 0.25), width: 1),
+                  border: Border.all(
+                    color: color.withValues(alpha: 0.25),
+                    width: 1,
+                  ),
                 ),
                 child: Row(
                   children: [
@@ -388,7 +435,9 @@ class _AppointmentsTabState extends ConsumerState<AppointmentsTab> {
                     const SizedBox(width: 10),
                     Expanded(
                       child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: isVerySmall ? 2 : 8),
+                        padding: EdgeInsets.symmetric(
+                          vertical: isVerySmall ? 2 : 8,
+                        ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -506,10 +555,15 @@ class _AppointmentsTabState extends ConsumerState<AppointmentsTab> {
                   decoration: BoxDecoration(
                     color: DoctorTheme.accentAmber.withValues(alpha: 0.1),
                     shape: BoxShape.circle,
-                    border: Border.all(color: DoctorTheme.accentAmber.withValues(alpha: 0.2)),
+                    border: Border.all(
+                      color: DoctorTheme.accentAmber.withValues(alpha: 0.2),
+                    ),
                   ),
                   child: const Center(
-                    child: Icon(Icons.person_outline_rounded, color: DoctorTheme.accentAmber),
+                    child: Icon(
+                      Icons.person_outline_rounded,
+                      color: DoctorTheme.accentAmber,
+                    ),
                   ),
                 ),
                 const SizedBox(width: 16),
@@ -527,7 +581,9 @@ class _AppointmentsTabState extends ConsumerState<AppointmentsTab> {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        DateFormat('MMM d, h:mm a').format(appt.requestedDatetime),
+                        DateFormat(
+                          'MMM d, h:mm a',
+                        ).format(appt.requestedDatetime),
                         style: const TextStyle(
                           color: DoctorTheme.accentAmber,
                           fontSize: 13,
@@ -537,7 +593,10 @@ class _AppointmentsTabState extends ConsumerState<AppointmentsTab> {
                     ],
                   ),
                 ),
-                const Icon(Icons.chevron_right_rounded, color: DoctorTheme.textTertiary),
+                const Icon(
+                  Icons.chevron_right_rounded,
+                  color: DoctorTheme.textTertiary,
+                ),
               ],
             ),
           ),
@@ -558,13 +617,15 @@ class _AppointmentDetailSheet extends StatelessWidget {
     final color = status == 'accepted'
         ? DoctorTheme.accentCyan
         : status == 'requested'
-            ? DoctorTheme.accentAmber
-            : status == 'cancelled'
-                ? const Color(0xFFFF6B6B)
-                : DoctorTheme.textTertiary;
+        ? DoctorTheme.accentAmber
+        : status == 'cancelled'
+        ? const Color(0xFFFF6B6B)
+        : DoctorTheme.textTertiary;
 
     return Padding(
-      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      padding: EdgeInsets.only(
+        bottom: MediaQuery.of(context).viewInsets.bottom,
+      ),
       child: Container(
         decoration: const BoxDecoration(
           color: DoctorTheme.scaffoldBackground,
@@ -603,8 +664,13 @@ class _AppointmentDetailSheet extends StatelessWidget {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            DateFormat('EEEE, MMMM d • hh:mm a').format(appointment.requestedDatetime),
-                            style: const TextStyle(color: DoctorTheme.textSecondary, fontWeight: FontWeight.w600),
+                            DateFormat(
+                              'EEEE, MMMM d • hh:mm a',
+                            ).format(appointment.requestedDatetime),
+                            style: const TextStyle(
+                              color: DoctorTheme.textSecondary,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                         ],
                       ),
@@ -612,10 +678,18 @@ class _AppointmentDetailSheet extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 32),
-                  _detailRow(Icons.medical_services_outlined, 'Reason', appointment.displayReason),
+                  _detailRow(
+                    Icons.medical_services_outlined,
+                    'Reason',
+                    appointment.displayReason,
+                  ),
                   const SizedBox(height: 16),
                   if (appointment.chiefComplaint != null)
-                    _detailRow(Icons.notes_rounded, 'Notes', appointment.chiefComplaint!),
+                    _detailRow(
+                      Icons.notes_rounded,
+                      'Notes',
+                      appointment.chiefComplaint!,
+                    ),
                   const SizedBox(height: 40),
                   if (status == 'requested')
                     PendingAppointmentActions(appointment: appointment)
@@ -679,12 +753,20 @@ class _AppointmentDetailSheet extends StatelessWidget {
             children: [
               Text(
                 label,
-                style: const TextStyle(color: DoctorTheme.textTertiary, fontSize: 12, fontWeight: FontWeight.w600),
+                style: const TextStyle(
+                  color: DoctorTheme.textTertiary,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
               const SizedBox(height: 2),
               Text(
                 value,
-                style: const TextStyle(color: DoctorTheme.textPrimary, fontSize: 15, fontWeight: FontWeight.w500),
+                style: const TextStyle(
+                  color: DoctorTheme.textPrimary,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ],
           ),

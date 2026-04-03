@@ -50,24 +50,27 @@ class DoctorRepository {
     String? stateMedicalCouncil,
     String? aadhaarLastFour,
   }) async {
-    final response = await _dio.post('/api/doctors/register', data: {
-      'first_name': ?firstName,
-      'last_name': ?lastName,
-      'specialization': specialization,
-      'qualification': ?qualification,
-      'experience_years': ?experienceYears,
-      'bio': ?bio,
-      'languages_spoken': ?languagesSpoken,
-      'license_number': licenseNumber,
-      'license_issuing_authority': ?licenseIssuingAuthority,
-      'consultation_fee': consultationFee,
-      'degree': ?degree,
-      'degree_institution': ?degreeInstitution,
-      'degree_year': ?degreeYear,
-      'registration_year': ?registrationYear,
-      'state_medical_council': ?stateMedicalCouncil,
-      'aadhaar_last_four': ?aadhaarLastFour,
-    });
+    final response = await _dio.post(
+      '/api/doctors/register',
+      data: {
+        'first_name': ?firstName,
+        'last_name': ?lastName,
+        'specialization': specialization,
+        'qualification': ?qualification,
+        'experience_years': ?experienceYears,
+        'bio': ?bio,
+        'languages_spoken': ?languagesSpoken,
+        'license_number': licenseNumber,
+        'license_issuing_authority': ?licenseIssuingAuthority,
+        'consultation_fee': consultationFee,
+        'degree': ?degree,
+        'degree_institution': ?degreeInstitution,
+        'degree_year': ?degreeYear,
+        'registration_year': ?registrationYear,
+        'state_medical_council': ?stateMedicalCouncil,
+        'aadhaar_last_four': ?aadhaarLastFour,
+      },
+    );
     return DoctorProfile.fromJson(response.data as Map<String, dynamic>);
   }
 
@@ -108,21 +111,24 @@ class DoctorRepository {
     int? degreeYear,
     int? registrationYear,
   }) async {
-    final response = await _dio.put('/api/doctors/profile', data: {
-      'first_name': ?firstName,
-      'last_name': ?lastName,
-      'specialization': specialization,
-      'qualification': ?qualification,
-      'experience_years': ?experienceYears,
-      'bio': ?bio,
-      'license_number': ?licenseNumber,
-      'state_medical_council': ?stateMedicalCouncil,
-      'consultation_fee': consultationFee,
-      'degree': ?degree,
-      'degree_institution': ?degreeInstitution,
-      'degree_year': ?degreeYear,
-      'registration_year': ?registrationYear,
-    });
+    final response = await _dio.put(
+      '/api/doctors/profile',
+      data: {
+        'first_name': ?firstName,
+        'last_name': ?lastName,
+        'specialization': specialization,
+        'qualification': ?qualification,
+        'experience_years': ?experienceYears,
+        'bio': ?bio,
+        'license_number': ?licenseNumber,
+        'state_medical_council': ?stateMedicalCouncil,
+        'consultation_fee': consultationFee,
+        'degree': ?degree,
+        'degree_institution': ?degreeInstitution,
+        'degree_year': ?degreeYear,
+        'registration_year': ?registrationYear,
+      },
+    );
     return DoctorProfile.fromJson(response.data as Map<String, dynamic>);
   }
 
@@ -146,12 +152,15 @@ class DoctorRepository {
     required String garageObjectUuid,
     String? mimeType,
   }) async {
-    final response = await _dio.post('/api/doctors/kyc/documents', data: {
-      'document_type': documentType,
-      'file_name': fileName,
-      'garage_object_uuid': garageObjectUuid,
-      'mime_type': ?mimeType,
-    });
+    final response = await _dio.post(
+      '/api/doctors/kyc/documents',
+      data: {
+        'document_type': documentType,
+        'file_name': fileName,
+        'garage_object_uuid': garageObjectUuid,
+        'mime_type': ?mimeType,
+      },
+    );
     return response.data as Map<String, dynamic>;
   }
 
@@ -161,10 +170,10 @@ class DoctorRepository {
     required String fileName,
     required String contentType,
   }) async {
-    final response = await _dio.post('/api/compliance/upload-url', data: {
-      'file_name': fileName,
-      'content_type': contentType,
-    });
+    final response = await _dio.post(
+      '/api/compliance/upload-url',
+      data: {'file_name': fileName, 'content_type': contentType},
+    );
     return response.data as Map<String, dynamic>;
   }
 }

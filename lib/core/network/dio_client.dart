@@ -20,23 +20,25 @@ final dioClientProvider = Provider<Dio>((ref) {
   final secureStorage = ref.watch(secureStorageProvider);
   final refreshDio = Dio(BaseOptions(baseUrl: baseUrl));
 
-  final dio = Dio(BaseOptions(
-    baseUrl: baseUrl,
-    connectTimeout: const Duration(seconds: 10),
-    receiveTimeout: const Duration(seconds: 10),
-  ));
+  final dio = Dio(
+    BaseOptions(
+      baseUrl: baseUrl,
+      connectTimeout: const Duration(seconds: 10),
+      receiveTimeout: const Duration(seconds: 10),
+    ),
+  );
 
   // Add Auth Interceptor (adds token, refresh; retries on 401 using the same [dio]).
-  dio.interceptors.add(
-    AuthInterceptor(secureStorage, refreshDio, dio),
-  );
-  
+  dio.interceptors.add(AuthInterceptor(secureStorage, refreshDio, dio));
+
   // Add logging for debug mode
-  dio.interceptors.add(LogInterceptor(
-    requestBody: true,
-    responseBody: true,
-    logPrint: (obj) => print(obj.toString()),
-  ));
+  dio.interceptors.add(
+    LogInterceptor(
+      requestBody: true,
+      responseBody: true,
+      logPrint: (obj) => print(obj.toString()),
+    ),
+  );
 
   return dio;
 });

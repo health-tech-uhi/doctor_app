@@ -34,10 +34,10 @@ class KycUploadRepository {
     required String documentType,
   }) async {
     // Step 1 — get presigned upload URL from backend
-    final urlResponse = await _dio.post('/api/compliance/upload-url', data: {
-      'file_name': fileName,
-      'content_type': mimeType,
-    });
+    final urlResponse = await _dio.post(
+      '/api/compliance/upload-url',
+      data: {'file_name': fileName, 'content_type': mimeType},
+    );
     final uploadUrl = urlResponse.data['url'] as String;
     final key = urlResponse.data['key'] as String;
 
@@ -48,12 +48,10 @@ class KycUploadRepository {
       uploadUrl,
       data: Stream.fromIterable(fileBytes.map((b) => [b])),
       options: Options(
-        headers: {
-          'Content-Type': mimeType,
-          'Content-Length': fileBytes.length,
-        },
+        headers: {'Content-Type': mimeType, 'Content-Length': fileBytes.length},
         // Treat any 2xx as success
-        validateStatus: (status) => status != null && status >= 200 && status < 300,
+        validateStatus: (status) =>
+            status != null && status >= 200 && status < 300,
       ),
     );
 
@@ -62,12 +60,15 @@ class KycUploadRepository {
     final garageObjectUuid = parts.length >= 2 ? parts[1] : parts.last;
 
     // Step 4 — Register document metadata with the backend
-    await _dio.post('/api/doctors/kyc/documents', data: {
-      'document_type': documentType,
-      'file_name': fileName,
-      'garage_object_uuid': garageObjectUuid,
-      'mime_type': mimeType,
-    });
+    await _dio.post(
+      '/api/doctors/kyc/documents',
+      data: {
+        'document_type': documentType,
+        'file_name': fileName,
+        'garage_object_uuid': garageObjectUuid,
+        'mime_type': mimeType,
+      },
+    );
 
     return garageObjectUuid;
   }

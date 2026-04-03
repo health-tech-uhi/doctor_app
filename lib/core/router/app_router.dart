@@ -19,8 +19,9 @@ import '../../features/doctor/presentation/complete_profile_screen.dart';
 import '../../features/doctor/presentation/edit_profile_screen.dart';
 
 /// Root navigator — full-screen routes (e.g. complete profile) stack above the tab shell.
-final GlobalKey<NavigatorState> rootNavigatorKey =
-    GlobalKey<NavigatorState>(debugLabel: 'root');
+final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>(
+  debugLabel: 'root',
+);
 
 /// Rebroadcasts AuthState changes to GoRouter so it re-evaluates redirects
 /// automatically whenever authentication or verification status changes.
@@ -28,17 +29,14 @@ class RouterNotifier extends ChangeNotifier {
   final Ref _ref;
 
   RouterNotifier(this._ref) {
-    _ref.listen(
-      authNotifierProvider,
-      (previous, next) {
-        if (previous?.status != next.status ||
-            previous?.verificationStatus != next.verificationStatus ||
-            previous?.requiresProfileCompletion !=
-                next.requiresProfileCompletion) {
-          notifyListeners();
-        }
-      },
-    );
+    _ref.listen(authNotifierProvider, (previous, next) {
+      if (previous?.status != next.status ||
+          previous?.verificationStatus != next.verificationStatus ||
+          previous?.requiresProfileCompletion !=
+              next.requiresProfileCompletion) {
+        notifyListeners();
+      }
+    });
   }
 }
 
@@ -88,9 +86,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       if (!kycEnabled && isOnKyc) return '/home';
 
       if (kycEnabled && isAuthenticated) {
-        if (!isVerified &&
-            !isOnKyc &&
-            _isTabRootForKycGate(location)) {
+        if (!isVerified && !isOnKyc && _isTabRootForKycGate(location)) {
           return '/kyc';
         }
         if (isVerified && isOnKyc) return '/home';
@@ -101,10 +97,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       return null;
     },
     routes: [
-      GoRoute(
-        path: '/login',
-        builder: (context, state) => const LoginScreen(),
-      ),
+      GoRoute(path: '/login', builder: (context, state) => const LoginScreen()),
       GoRoute(
         path: '/signup',
         builder: (context, state) => const SignupScreen(),

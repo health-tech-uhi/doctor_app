@@ -14,6 +14,7 @@ class DoctorProfile {
   final List<String>? languagesSpoken;
   final String? licenseNumber;
   final String? licenseIssuingAuthority;
+
   /// Raw verification status string from backend: 'pending' | 'verified' | 'rejected'
   final String? verificationStatus;
   final double? consultationFeeInr;

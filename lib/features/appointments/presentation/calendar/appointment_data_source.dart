@@ -16,7 +16,9 @@ class AppointmentDataSource extends CalendarDataSource {
 
   @override
   DateTime getEndTime(int index) {
-    return _getAppointment(index).requestedDatetime.add(const Duration(minutes: 30));
+    return _getAppointment(
+      index,
+    ).requestedDatetime.add(const Duration(minutes: 30));
   }
 
   @override

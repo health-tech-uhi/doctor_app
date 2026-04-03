@@ -28,14 +28,13 @@ class _PendingAppointmentActionsState
     extends ConsumerState<PendingAppointmentActions> {
   bool _busy = false;
 
-  Future<void> _applyStatus(
-    String status, {
-    String? rejectionReason,
-  }) async {
+  Future<void> _applyStatus(String status, {String? rejectionReason}) async {
     if (_busy) return;
     setState(() => _busy = true);
     try {
-      await ref.read(appointmentsRepositoryProvider).updateStatus(
+      await ref
+          .read(appointmentsRepositoryProvider)
+          .updateStatus(
             widget.appointment.id,
             status: status,
             rejectionReason: rejectionReason,
@@ -44,22 +43,16 @@ class _PendingAppointmentActionsState
       if (!mounted) return;
       AppSnackBar.show(
         context,
-        status == 'accepted' ? 'Appointment approved.' : 'Appointment declined.',
+        status == 'accepted'
+            ? 'Appointment approved.'
+            : 'Appointment declined.',
       );
     } on DioException catch (e) {
       if (!mounted) return;
-      AppSnackBar.show(
-        context,
-        userFacingErrorMessage(e),
-        isError: true,
-      );
+      AppSnackBar.show(context, userFacingErrorMessage(e), isError: true);
     } catch (e) {
       if (!mounted) return;
-      AppSnackBar.show(
-        context,
-        userFacingErrorMessage(e),
-        isError: true,
-      );
+      AppSnackBar.show(context, userFacingErrorMessage(e), isError: true);
     } finally {
       if (mounted) setState(() => _busy = false);
     }
@@ -88,8 +81,7 @@ class _PendingAppointmentActionsState
               child: const Text('Cancel'),
             ),
             FilledButton(
-              onPressed: () =>
-                  Navigator.pop(ctx, controller.text.trim()),
+              onPressed: () => Navigator.pop(ctx, controller.text.trim()),
               child: const Text('Decline'),
             ),
           ],
@@ -123,9 +115,7 @@ class _PendingAppointmentActionsState
       onPressed: _onApprove,
       style: FilledButton.styleFrom(
         minimumSize: Size(0, height),
-        padding: EdgeInsets.symmetric(
-          horizontal: widget.compact ? 12 : 16,
-        ),
+        padding: EdgeInsets.symmetric(horizontal: widget.compact ? 12 : 16),
         backgroundColor: Colors.tealAccent.withValues(alpha: 0.85),
         foregroundColor: Colors.black87,
         textStyle: TextStyle(fontSize: fontSize, fontWeight: FontWeight.w600),
@@ -137,9 +127,7 @@ class _PendingAppointmentActionsState
       onPressed: _onReject,
       style: OutlinedButton.styleFrom(
         minimumSize: Size(0, height),
-        padding: EdgeInsets.symmetric(
-          horizontal: widget.compact ? 12 : 16,
-        ),
+        padding: EdgeInsets.symmetric(horizontal: widget.compact ? 12 : 16),
         foregroundColor: Colors.redAccent,
         side: BorderSide(color: Colors.redAccent.withValues(alpha: 0.6)),
         textStyle: TextStyle(fontSize: fontSize, fontWeight: FontWeight.w600),

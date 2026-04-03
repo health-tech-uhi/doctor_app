@@ -12,7 +12,7 @@ class AuroraBackground extends StatelessWidget {
       children: [
         // Base background
         Container(color: AppGradients.midnightBlue),
-        
+
         // Aurora Orbs
         Positioned(
           top: -100,
@@ -38,7 +38,7 @@ class AuroraBackground extends StatelessWidget {
             size: 300,
           ),
         ),
-        
+
         // The main content
         child,
       ],
@@ -59,12 +59,7 @@ class _AuroraOrb extends StatelessWidget {
       height: size,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        gradient: RadialGradient(
-          colors: [
-            color,
-            color.withOpacity(0.0),
-          ],
-        ),
+        gradient: RadialGradient(colors: [color, color.withOpacity(0.0)]),
       ),
     );
   }

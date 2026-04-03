@@ -9,15 +9,15 @@ enum AuthStatus {
   unauthenticated,
   authenticating,
   authenticated,
-  error
+  error,
 }
 
 /// Possible KYC verification states mirroring the backend `verification_status` field.
 enum VerificationStatus {
-  unknown,   // Haven't fetched yet
-  pending,   // Registered, documents not yet approved
-  verified,  // Admin approved — full platform access
-  rejected,  // Rejected by admin — must resubmit
+  unknown, // Haven't fetched yet
+  pending, // Registered, documents not yet approved
+  verified, // Admin approved — full platform access
+  rejected, // Rejected by admin — must resubmit
 }
 
 /// Maps raw backend string values to our typed [VerificationStatus] enum.
@@ -38,8 +38,10 @@ VerificationStatus verificationStatusFromString(String? s) {
 class AuthState {
   final AuthStatus status;
   final String? errorMessage;
+
   /// KYC verification state — populated after login from the doctor profile endpoint.
   final VerificationStatus verificationStatus;
+
   /// True when identity login succeeded but doctor profile is not created yet.
   final bool requiresProfileCompletion;
 
@@ -61,8 +63,9 @@ class AuthState {
   }) {
     return AuthState(
       status: status ?? this.status,
-      errorMessage:
-          clearErrorMessage ? null : (errorMessage ?? this.errorMessage),
+      errorMessage: clearErrorMessage
+          ? null
+          : (errorMessage ?? this.errorMessage),
       verificationStatus: verificationStatus ?? this.verificationStatus,
       requiresProfileCompletion:
           requiresProfileCompletion ?? this.requiresProfileCompletion,

@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-/// Single visual language for the doctor app: premium midnight surfaces, 
+/// Single visual language for the doctor app: premium midnight surfaces,
 /// aurora accents, and glassmorphism.
 abstract final class DoctorTheme {
   // Base Palette
   static const Color scaffoldBackground = Color(0xFF0B1426);
   static const Color surfaceElevated = Color(0xFF101D35);
-  
+
   // Aurora Accents
   static const Color accent = Color(0xFF64FFDA); // Original Mint
   static const Color accentCyan = Color(0xFF4DD0E1);
   static const Color accentLavender = Color(0xFFB388FF);
   static const Color accentAmber = Color(0xFFFFD54F);
-  
+
   // Typography Tokens
   static const Color textPrimary = Color(0xFFF0F4FF);
   static const Color textSecondary = Color(0xFF8B9CC7);
   static const Color textTertiary = Color(0xFF576490);
   static const Color secondaryText = Color(0xB3FFFFFF);
-  
+
   // Glassmorphism Tokens
   static const Color glassSurface = Color(0xFF162040);
   static const Color glassStroke = Color(0x1AF0F4FF);
@@ -30,7 +30,7 @@ abstract final class DoctorTheme {
       brightness: Brightness.dark,
       scaffoldBackgroundColor: scaffoldBackground,
       primaryColor: accent,
-      
+
       colorScheme: const ColorScheme.dark(
         primary: accent,
         secondary: accentCyan,
@@ -100,15 +100,14 @@ abstract final class DoctorTheme {
         ),
         iconTheme: const IconThemeData(color: textPrimary),
       ),
-      
-      dividerTheme: const DividerThemeData(
-        color: glassStroke,
-        thickness: 1,
-      ),
+
+      dividerTheme: const DividerThemeData(color: glassStroke, thickness: 1),
 
       dialogTheme: const DialogThemeData(
         backgroundColor: surfaceElevated,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24))),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(24)),
+        ),
       ),
 
       bottomSheetTheme: const BottomSheetThemeData(
@@ -172,14 +171,8 @@ abstract final class DoctorTheme {
       listTileTheme: const ListTileThemeData(
         iconColor: textSecondary,
         textColor: textPrimary,
-        titleTextStyle: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.w600,
-        ),
-        subtitleTextStyle: TextStyle(
-          fontSize: 13,
-          color: textSecondary,
-        ),
+        titleTextStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+        subtitleTextStyle: TextStyle(fontSize: 13, color: textSecondary),
       ),
 
       iconTheme: const IconThemeData(color: textPrimary, size: 24),
@@ -189,9 +182,6 @@ abstract final class DoctorTheme {
   static const LinearGradient profileGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [
-      accentCyan,
-      Color(0xFF00CBA9),
-    ],
+    colors: [accentCyan, Color(0xFF00CBA9)],
   );
 }

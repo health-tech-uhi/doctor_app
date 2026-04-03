@@ -5,7 +5,9 @@ import '../../../core/data/paginated_result.dart';
 import '../../../core/network/dio_client.dart';
 import '../domain/care_relationship.dart';
 
-final relationshipsRepositoryProvider = Provider<RelationshipsRepository>((ref) {
+final relationshipsRepositoryProvider = Provider<RelationshipsRepository>((
+  ref,
+) {
   return RelationshipsRepository(ref.watch(dioClientProvider));
 });
 

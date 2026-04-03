@@ -50,7 +50,8 @@ class Appointment {
       doctorId: json['doctor_id'] as String,
       clinicId: json['clinic_id'] as String?,
       requestedDatetime:
-          parseDt('requested_datetime') ?? DateTime.fromMillisecondsSinceEpoch(0),
+          parseDt('requested_datetime') ??
+          DateTime.fromMillisecondsSinceEpoch(0),
       confirmedDatetime: parseDt('confirmed_datetime'),
       status: (json['status'] as String?) ?? 'requested',
       appointmentMode: json['appointment_mode'] as String?,
@@ -64,12 +65,12 @@ class Appointment {
     );
   }
 
-  String get displayPatientName => patientName?.trim().isNotEmpty == true
-      ? patientName!.trim()
-      : 'Patient';
+  String get displayPatientName =>
+      patientName?.trim().isNotEmpty == true ? patientName!.trim() : 'Patient';
 
-  String get displayReason =>
-      chiefComplaint?.trim().isNotEmpty == true ? chiefComplaint!.trim() : 'Consultation';
+  String get displayReason => chiefComplaint?.trim().isNotEmpty == true
+      ? chiefComplaint!.trim()
+      : 'Consultation';
 
   /// requested | accepted | rejected | completed | cancelled
   String get normalizedStatus => status.toLowerCase();
