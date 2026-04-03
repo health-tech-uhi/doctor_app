@@ -56,8 +56,11 @@ class _PatientsTabState extends ConsumerState<PatientsTab> {
                   await ref.read(relationshipsListProvider.future);
                 },
                 child: async.when(
-                  loading: () => const Center(child: CircularProgressIndicator(strokeWidth: 2)),
-                  error: (_, _) => const Center(child: Text('Connect to load patients')),
+                  loading: () => const Center(
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  ),
+                  error: (_, _) =>
+                      const Center(child: Text('Connect to load patients')),
                   data: (all) {
                     final filtered = _filter(all);
                     if (filtered.isEmpty) return _buildEmpty(all.isEmpty);
@@ -89,13 +92,19 @@ class _PatientsTabState extends ConsumerState<PatientsTab> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Patients', 
-                  style: Theme.of(context).textTheme.displayMedium?.copyWith(fontSize: 28)
+                  'Patients',
+                  style: Theme.of(
+                    context,
+                  ).textTheme.displayMedium?.copyWith(fontSize: 28),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   '$count active patients in your panel',
-                  style: const TextStyle(color: DoctorTheme.textSecondary, fontSize: 13, fontWeight: FontWeight.w500),
+                  style: const TextStyle(
+                    color: DoctorTheme.textSecondary,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ],
             ),
@@ -120,11 +129,22 @@ class _PatientsTabState extends ConsumerState<PatientsTab> {
         style: const TextStyle(color: DoctorTheme.textPrimary, fontSize: 14),
         decoration: InputDecoration(
           hintText: 'Search patients by name or status...',
-          hintStyle: const TextStyle(color: DoctorTheme.textTertiary, fontSize: 14),
-          prefixIcon: const Icon(Icons.search_rounded, color: DoctorTheme.accentCyan, size: 20),
+          hintStyle: const TextStyle(
+            color: DoctorTheme.textTertiary,
+            fontSize: 14,
+          ),
+          prefixIcon: const Icon(
+            Icons.search_rounded,
+            color: DoctorTheme.accentCyan,
+            size: 20,
+          ),
           suffixIcon: _query.isNotEmpty
               ? IconButton(
-                  icon: const Icon(Icons.close_rounded, color: DoctorTheme.textTertiary, size: 18),
+                  icon: const Icon(
+                    Icons.close_rounded,
+                    color: DoctorTheme.textTertiary,
+                    size: 18,
+                  ),
                   onPressed: () {
                     _searchCtrl.clear();
                     setState(() => _query = '');
@@ -153,13 +173,13 @@ class _PatientsTabState extends ConsumerState<PatientsTab> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    r.displayPatientName, 
+                    r.displayPatientName,
                     style: const TextStyle(
                       color: DoctorTheme.textPrimary,
-                      fontWeight: FontWeight.w700, 
+                      fontWeight: FontWeight.w700,
                       fontSize: 16,
                       letterSpacing: -0.2,
-                    )
+                    ),
                   ),
                   const SizedBox(height: 4),
                   Row(
@@ -175,14 +195,22 @@ class _PatientsTabState extends ConsumerState<PatientsTab> {
                       const SizedBox(width: 6),
                       Text(
                         r.relationshipStatus ?? 'Active Patient',
-                        style: const TextStyle(color: DoctorTheme.textSecondary, fontSize: 12, fontWeight: FontWeight.w500),
+                        style: const TextStyle(
+                          color: DoctorTheme.textSecondary,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ],
                   ),
                 ],
               ),
             ),
-            const Icon(Icons.chevron_right_rounded, color: DoctorTheme.textTertiary, size: 20),
+            const Icon(
+              Icons.chevron_right_rounded,
+              color: DoctorTheme.textTertiary,
+              size: 20,
+            ),
           ],
         ),
       ),
@@ -209,8 +237,8 @@ class _PatientsTabState extends ConsumerState<PatientsTab> {
       child: Text(
         initialsFromName(name),
         style: const TextStyle(
-          color: Colors.white, 
-          fontWeight: FontWeight.w800, 
+          color: Colors.white,
+          fontWeight: FontWeight.w800,
           fontSize: 18,
           letterSpacing: 0.5,
         ),
@@ -219,18 +247,55 @@ class _PatientsTabState extends ConsumerState<PatientsTab> {
   }
 
   Widget _buildEmpty(bool noRelationshipsAtAll) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.people_outline_rounded, size: 64, color: DoctorTheme.textTertiary.withOpacity(0.3)),
-          const SizedBox(height: 16),
-          Text(
-            noRelationshipsAtAll ? 'No patients found' : 'No patients match your search',
-            style: const TextStyle(color: DoctorTheme.textSecondary, fontSize: 15, fontWeight: FontWeight.w500),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: Container(
+            constraints: BoxConstraints(minHeight: constraints.maxHeight),
+            alignment: Alignment.center,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.people_outline_rounded,
+                  size: 64,
+                  color: DoctorTheme.textTertiary.withValues(alpha: 0.3),
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  noRelationshipsAtAll
+                      ? 'No patients found'
+                      : 'No patients match your search',
+                  style: const TextStyle(
+                    color: DoctorTheme.textSecondary,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                if (noRelationshipsAtAll) ...[
+                  const SizedBox(height: 24),
+                  SizedBox(
+                    width: 200,
+                    child: FilledButton(
+                      style: FilledButton.styleFrom(
+                        backgroundColor: DoctorTheme.accentCyan,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      onPressed: () {},
+                      child: const Text('Add New Patient'),
+                    ),
+                  ),
+                ],
+              ],
+            ),
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
