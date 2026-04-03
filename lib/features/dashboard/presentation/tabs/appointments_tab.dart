@@ -92,7 +92,7 @@ class _AppointmentsTabState extends ConsumerState<AppointmentsTab> {
                     const Text(
                       'Manage appointments and availability',
                       style: TextStyle(
-                        color: DoctorTheme.textSecondary,
+                        color: DoctorTheme.secondaryText,
                         fontSize: 13,
                         fontWeight: FontWeight.w500,
                       ),
@@ -162,13 +162,13 @@ class _AppointmentsTabState extends ConsumerState<AppointmentsTab> {
               Icon(
                 icon,
                 size: 16,
-                color: isSelected ? DoctorTheme.accentCyan : DoctorTheme.textTertiary,
+                color: isSelected ? DoctorTheme.accentCyan : DoctorTheme.secondaryText,
               ),
               const SizedBox(width: 8),
               Text(
                 label,
                 style: TextStyle(
-                  color: isSelected ? DoctorTheme.accentCyan : DoctorTheme.textTertiary,
+                  color: isSelected ? DoctorTheme.accentCyan : DoctorTheme.secondaryText,
                   fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600,
                   fontSize: 13,
                 ),
@@ -273,7 +273,7 @@ class _AppointmentsTabState extends ConsumerState<AppointmentsTab> {
           child: Text(
             label,
             style: TextStyle(
-              color: isSelected ? DoctorTheme.accentCyan : DoctorTheme.textTertiary,
+              color: isSelected ? DoctorTheme.accentCyan : DoctorTheme.secondaryText,
               fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600,
               fontSize: 12,
             ),
@@ -326,7 +326,7 @@ class _AppointmentsTabState extends ConsumerState<AppointmentsTab> {
           timeInterval: Duration(minutes: 30),
           timeFormat: 'hh:mm a',
           timeIntervalHeight: 120, // Increased for spacing
-          timeRulerSize: 75, // Corrected location
+          timeRulerSize: 91, // Wider ruler to achieve ~16dp additional left label breathing room
           timelineAppointmentHeight: 60,
           timeTextStyle: TextStyle(
             color: DoctorTheme.textTertiary,
@@ -400,9 +400,8 @@ class _AppointmentsTabState extends ConsumerState<AppointmentsTab> {
                                     appt.displayPatientName,
                                     style: TextStyle(
                                       color: DoctorTheme.textPrimary,
-                                      fontWeight: FontWeight.w800,
-                                      fontSize: isVerySmall ? 10 : 13,
-                                      letterSpacing: -0.2,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: isVerySmall ? 14 : 16,
                                     ),
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
@@ -431,11 +430,10 @@ class _AppointmentsTabState extends ConsumerState<AppointmentsTab> {
                               const SizedBox(height: 2),
                               Text(
                                 appt.displayReason,
-                                style: TextStyle(
-                                  color: DoctorTheme.textSecondary.withValues(alpha: 0.9),
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w600,
-                                  letterSpacing: -0.1,
+                                style: const TextStyle(
+                                  color: DoctorTheme.secondaryText,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400,
                                 ),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,

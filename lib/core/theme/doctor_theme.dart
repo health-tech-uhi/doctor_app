@@ -18,6 +18,7 @@ abstract final class DoctorTheme {
   static const Color textPrimary = Color(0xFFF0F4FF);
   static const Color textSecondary = Color(0xFF8B9CC7);
   static const Color textTertiary = Color(0xFF576490);
+  static const Color secondaryText = Color(0xB3FFFFFF);
   
   // Glassmorphism Tokens
   static const Color glassSurface = Color(0xFF162040);
