@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/theme/doctor_theme.dart';
-import '../../../../core/ui/glass/app_gradients.dart';
 import '../../../../core/ui/glass/aurora_background.dart';
 import '../../../../core/ui/glass/glass_card.dart';
 import '../../../../core/ui/glass/glass_icon_button.dart';

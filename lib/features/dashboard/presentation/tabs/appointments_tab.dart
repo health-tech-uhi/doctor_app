@@ -458,6 +458,7 @@ class _AppointmentsTabState extends ConsumerState<AppointmentsTab> {
   void _showAppointmentDetails(Appointment appt) {
     showModalBottomSheet(
       context: context,
+      useRootNavigator: true,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
       builder: (context) => _AppointmentDetailSheet(appointment: appt),
