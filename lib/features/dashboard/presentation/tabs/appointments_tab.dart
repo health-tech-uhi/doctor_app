@@ -1,10 +1,12 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart' hide Appointment;
 import 'package:syncfusion_flutter_core/theme.dart';
 
+import '../../../../core/config/feature_flags.dart';
 import '../../../../core/theme/doctor_theme.dart';
 import '../../../../core/ui/glass/aurora_background.dart';
 import '../../../../core/ui/glass/glass_icon_button.dart';
@@ -449,8 +451,8 @@ class _AppointmentsTabState extends ConsumerState<AppointmentsTab> {
                                     appt.displayPatientName,
                                     style: TextStyle(
                                       color: DoctorTheme.textPrimary,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: isVerySmall ? 14 : 16,
+                                      fontWeight: FontWeight.w800,
+                                      fontSize: isVerySmall ? 14 : 18,
                                     ),
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
@@ -575,8 +577,8 @@ class _AppointmentsTabState extends ConsumerState<AppointmentsTab> {
                         appt.displayPatientName,
                         style: const TextStyle(
                           color: DoctorTheme.textPrimary,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 16,
+                          fontWeight: FontWeight.w800,
+                          fontSize: 18,
                         ),
                       ),
                       const SizedBox(height: 4),
@@ -606,13 +608,13 @@ class _AppointmentsTabState extends ConsumerState<AppointmentsTab> {
   }
 }
 
-class _AppointmentDetailSheet extends StatelessWidget {
+class _AppointmentDetailSheet extends ConsumerWidget {
   const _AppointmentDetailSheet({required this.appointment});
 
   final Appointment appointment;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final status = appointment.normalizedStatus;
     final color = status == 'accepted'
         ? DoctorTheme.accentCyan
@@ -685,7 +687,7 @@ class _AppointmentDetailSheet extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   if (appointment.chiefComplaint != null)
-                    _detailRow(
+                    _buildNotesSection(
                       Icons.notes_rounded,
                       'Notes',
                       appointment.chiefComplaint!,
@@ -693,7 +695,22 @@ class _AppointmentDetailSheet extends StatelessWidget {
                   const SizedBox(height: 40),
                   if (status == 'requested')
                     PendingAppointmentActions(appointment: appointment)
-                  else if (status == 'accepted')
+                  else if (status == 'accepted') ...[
+                    if (ref.watch(scribeFeatureEnabledProvider)) ...[
+                      FilledButton.icon(
+                        onPressed: () {
+                          Navigator.pop(context);
+                          context.push('/scribe/session', extra: appointment);
+                        },
+                        icon: const Icon(Icons.mic_rounded),
+                        label: const Text('Clinical scribe'),
+                        style: FilledButton.styleFrom(
+                          backgroundColor: DoctorTheme.accentCyan,
+                          foregroundColor: Colors.black87,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                    ],
                     FilledButton.icon(
                       onPressed: () {},
                       icon: const Icon(Icons.videocam_rounded),
@@ -703,6 +720,7 @@ class _AppointmentDetailSheet extends StatelessWidget {
                         foregroundColor: Colors.black87,
                       ),
                     ),
+                  ],
                   const SizedBox(height: 20),
                 ],
               ),
@@ -772,6 +790,91 @@ class _AppointmentDetailSheet extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildNotesSection(IconData icon, String label, String value) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: DoctorTheme.glassSurface,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: DoctorTheme.glassStroke),
+          ),
+          child: Icon(icon, size: 20, color: DoctorTheme.accentCyan),
+        ),
+        const SizedBox(width: 16),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    label,
+                    style: const TextStyle(
+                      color: DoctorTheme.textTertiary,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  _buildEditButton(),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.05),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  value,
+                  style: const TextStyle(
+                    color: DoctorTheme.textPrimary,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildEditButton() {
+    return GestureDetector(
+      onTap: () {
+        // Handle edit notes
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: DoctorTheme.accentCyan.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(6),
+        ),
+        child: const Row(
+          children: [
+            Icon(Icons.edit_rounded, size: 12, color: DoctorTheme.accentCyan),
+            SizedBox(width: 4),
+            Text(
+              'Edit',
+              style: TextStyle(
+                color: DoctorTheme.accentCyan,
+                fontSize: 10,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

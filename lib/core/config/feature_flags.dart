@@ -18,3 +18,15 @@ bool _parseBoolFlag(String? value, {required bool fallback}) {
 final kycFeatureEnabledProvider = Provider<bool>((ref) {
   return _parseBoolFlag(dotenv.env['FEATURE_KYC_ENABLED'], fallback: false);
 });
+
+/// Clinical scribe: mic streaming + WebSocket to `clinical-scribe` relay.
+final scribeFeatureEnabledProvider = Provider<bool>((ref) {
+  return _parseBoolFlag(dotenv.env['FEATURE_SCRIBE_ENABLED'], fallback: false);
+});
+
+/// Base WebSocket URL for the scribe relay (path `/ws` is appended if missing).
+final scribeWsBaseUrlProvider = Provider<String>((ref) {
+  return dotenv.env['SCRIBE_WS_BASE_URL']?.trim().isNotEmpty == true
+      ? dotenv.env['SCRIBE_WS_BASE_URL']!.trim()
+      : 'ws://localhost:8090';
+});

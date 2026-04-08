@@ -44,6 +44,19 @@ post_install do |installer|
       config.build_settings['CODE_SIGN_STYLE'] = 'Automatic'
       config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
       config.build_settings['CLANG_ENABLE_EXPLICIT_MODULES'] = 'NO'
+
+      # permission_handler: compile microphone permission support on iOS
+      # (without this, Permission.microphone.request() never succeeds — see Baseflow docs)
+      defs = config.build_settings['GCC_PREPROCESSOR_DEFINITIONS']
+      if defs.nil?
+        defs = ['$(inherited)', 'PERMISSION_MICROPHONE=1']
+      elsif defs.is_a?(Array)
+        defs = defs.dup
+        defs << 'PERMISSION_MICROPHONE=1' unless defs.include?('PERMISSION_MICROPHONE=1')
+      else
+        defs = [defs, 'PERMISSION_MICROPHONE=1']
+      end
+      config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] = defs
     end
   end
 end

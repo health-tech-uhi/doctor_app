@@ -17,6 +17,9 @@ import '../../features/dashboard/presentation/tabs/patients_tab.dart';
 import '../../features/dashboard/presentation/tabs/profile_tab.dart';
 import '../../features/doctor/presentation/complete_profile_screen.dart';
 import '../../features/doctor/presentation/edit_profile_screen.dart';
+import '../../features/appointments/domain/appointment.dart';
+import '../../features/scribe/presentation/scribe_session_screen.dart';
+import '../../features/scribe/presentation/summary_review_screen.dart';
 
 /// Root navigator — full-screen routes (e.g. complete profile) stack above the tab shell.
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>(
@@ -121,6 +124,32 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/complete-profile',
         parentNavigatorKey: rootNavigatorKey,
         builder: (context, state) => const CompleteProfileScreen(),
+      ),
+      GoRoute(
+        path: '/scribe/session',
+        parentNavigatorKey: rootNavigatorKey,
+        builder: (context, state) {
+          final appt = state.extra as Appointment?;
+          if (appt == null) {
+            return const Scaffold(
+              body: Center(child: Text('Missing appointment for scribe')),
+            );
+          }
+          return ScribeSessionScreen(appointment: appt);
+        },
+      ),
+      GoRoute(
+        path: '/scribe/review',
+        parentNavigatorKey: rootNavigatorKey,
+        builder: (context, state) {
+          final args = state.extra as ScribeSummaryReviewArgs?;
+          if (args == null) {
+            return const Scaffold(
+              body: Center(child: Text('Missing consultation summary')),
+            );
+          }
+          return SummaryReviewScreen(args: args);
+        },
       ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
