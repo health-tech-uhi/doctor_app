@@ -178,6 +178,9 @@ class ScribeSessionController extends ChangeNotifier {
           _setElapsed(DateTime.now().difference(_startedAt!));
         });
         _scheduleNotify();
+        // Begin streaming PCM as soon as the relay is ready (permission dialog may show).
+        // Without this, Sarvam stays idle until the user taps "Start mic" and no transcripts appear.
+        unawaited(startMicrophone());
       }),
     );
 

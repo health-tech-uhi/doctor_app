@@ -15,6 +15,7 @@ class ScribeWebSocketService {
   final String _baseUrl;
   WebSocketChannel? _channel;
   StreamSubscription<dynamic>? _subscription;
+  int _pcmChunksSent = 0;
 
   final _transcripts = StreamController<TranscriptMessage>.broadcast();
   final _insights = StreamController<InsightMessage>.broadcast();
@@ -53,6 +54,7 @@ class ScribeWebSocketService {
     required String patientId,
   }) async {
     await disconnect();
+    _pcmChunksSent = 0;
     final uri = _buildUri(
       token: token,
       appointmentId: appointmentId,
@@ -143,7 +145,16 @@ class ScribeWebSocketService {
     }
   }
 
+  /// Same PCM buffers that drive the live waveform ([ScribePcmRecorder] calls [onChunk] right after level metering).
   void sendAudio(Uint8List pcmData) {
+    _pcmChunksSent++;
+    if (kDebugMode &&
+        (_pcmChunksSent == 1 || _pcmChunksSent % 200 == 0)) {
+      debugPrint(
+        'scribe_ws: PCM outbound #$_pcmChunksSent (${pcmData.length} B), '
+        'socket=${_channel != null}',
+      );
+    }
     _channel?.sink.add(pcmData);
   }
 
